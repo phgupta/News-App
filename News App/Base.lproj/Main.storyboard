@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -62,7 +62,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="154"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CcX-hY-S8t" id="iSt-cB-HHE">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="153.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="154"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YRq-LC-nu9">
@@ -72,14 +72,13 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fqi-c3-ErN">
-                                            <rect key="frame" x="166" y="11" width="33.5" height="21"/>
+                                            <rect key="frame" x="166" y="11" width="193" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmd-xI-B3u">
-                                            <rect key="frame" x="166" y="40" width="50" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmd-xI-B3u">
+                                            <rect key="frame" x="166" y="40" width="209" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -87,9 +86,13 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="YRq-LC-nu9" firstAttribute="centerY" secondItem="iSt-cB-HHE" secondAttribute="centerY" id="Hn0-Pq-dkj"/>
-                                        <constraint firstItem="YRq-LC-nu9" firstAttribute="top" secondItem="iSt-cB-HHE" secondAttribute="topMargin" constant="3" id="XPh-31-fqg"/>
+                                        <constraint firstItem="Nmd-xI-B3u" firstAttribute="top" secondItem="fqi-c3-ErN" secondAttribute="bottom" constant="8" id="cDw-7R-h1r"/>
+                                        <constraint firstItem="Nmd-xI-B3u" firstAttribute="trailing" secondItem="iSt-cB-HHE" secondAttribute="trailingMargin" constant="8" id="eQQ-qK-JDi"/>
                                         <constraint firstItem="fqi-c3-ErN" firstAttribute="leading" secondItem="YRq-LC-nu9" secondAttribute="trailing" constant="8" symbolic="YES" id="fXg-OA-c6h"/>
+                                        <constraint firstItem="YRq-LC-nu9" firstAttribute="top" secondItem="iSt-cB-HHE" secondAttribute="topMargin" constant="3" id="hjT-BR-TL8"/>
                                         <constraint firstItem="YRq-LC-nu9" firstAttribute="leading" secondItem="iSt-cB-HHE" secondAttribute="leadingMargin" id="jzi-dX-YmD"/>
+                                        <constraint firstItem="Nmd-xI-B3u" firstAttribute="leading" secondItem="YRq-LC-nu9" secondAttribute="trailing" constant="8" id="prq-4V-nvl"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="fqi-c3-ErN" secondAttribute="trailing" constant="8" id="sYg-eC-3PL"/>
                                         <constraint firstItem="fqi-c3-ErN" firstAttribute="top" secondItem="YRq-LC-nu9" secondAttribute="top" id="uPn-Fz-aD3"/>
                                     </constraints>
                                 </tableViewCellContentView>
