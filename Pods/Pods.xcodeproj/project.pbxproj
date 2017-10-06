@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		000B027D61D888F446BBF4D6018990F3 /* SwiftHTTP-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA006E3243C5382D71A48AACFE50BCC /* SwiftHTTP-dummy.m */; };
 		1376AD4769026E88DF0C44BEBAD15749 /* Pods-News App-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 83A40FC5B7CA66203E89A1D5E77B9625 /* Pods-News App-dummy.m */; };
-		19DFE5D342E357A1E9B4E8D357B64C78 /* JSONJoy-Swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7245BE7819912042828C60FE8FB61364 /* JSONJoy-Swift-dummy.m */; };
+		19EB8BC7A125CF792C747E8F7D1836E0 /* JSONJoy-Swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7245BE7819912042828C60FE8FB61364 /* JSONJoy-Swift-dummy.m */; };
 		1A0DDAC35A5F21A05EDD2A0FFA851F4C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		3395BC5D4408538563192B97CA2EB6D4 /* JSONJoy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA12422E862A2081265C0BC2B880F42 /* JSONJoy.swift */; };
 		6EFDD9F6BE5F172B15EAC4418555127A /* StatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65DF0381FC5952CAC6509842F8C5E95 /* StatusCode.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		7B174B3BCF56927FC8C4629F7F09C190 /* JSONJoy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA12422E862A2081265C0BC2B880F42 /* JSONJoy.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8067A1BF6188B06BFF9D6B14504711B9 /* SwiftHTTP-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BD39C36D6D654A49CFE1260B12DE15 /* SwiftHTTP-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81AEFC3799AC5C7ECFF690DA905BE8A4 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C401E0EC2E12611DEC76CE1FA77375 /* Upload.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9DAEE11CB9C12A292BB5BFDF440F04F6 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95057FCB1CB952BD6EDCBA8E16509DC0 /* Operation.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -282,7 +282,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5D3CB1E541E4C730E3AA447896BF9953 /* Build configuration list for PBXNativeTarget "JSONJoy-Swift" */;
 			buildPhases = (
-				3E3998DBCCBA449BB20691B32D62340E /* Sources */,
+				35D376B6C83D580000510AFFA7CE915B /* Sources */,
 				0198377132F44A52078A5EBE16F2B92B /* Frameworks */,
 				DFC1DBB4D4C12B21C5962C730F7F0A7D /* Headers */,
 			);
@@ -341,6 +341,15 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		35D376B6C83D580000510AFFA7CE915B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19EB8BC7A125CF792C747E8F7D1836E0 /* JSONJoy-Swift-dummy.m in Sources */,
+				3395BC5D4408538563192B97CA2EB6D4 /* JSONJoy.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		365C5440FF05717B8A393516E0023F49 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -351,15 +360,6 @@
 				6EFDD9F6BE5F172B15EAC4418555127A /* StatusCode.swift in Sources */,
 				000B027D61D888F446BBF4D6018990F3 /* SwiftHTTP-dummy.m in Sources */,
 				81AEFC3799AC5C7ECFF690DA905BE8A4 /* Upload.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3E3998DBCCBA449BB20691B32D62340E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19DFE5D342E357A1E9B4E8D357B64C78 /* JSONJoy-Swift-dummy.m in Sources */,
-				7B174B3BCF56927FC8C4629F7F09C190 /* JSONJoy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -482,7 +482,7 @@ private func ==(lhs: HTTP.State, rhs: HTTP.State) -> Bool {
 
 // Lock for getting / setting state safely
 extension NSLock {
-	func withCriticalScope<T>(_ block: (Void) -> T) -> T {
+	func withCriticalScope<T>(_ block: () -> T) -> T { // change this to Void
 		lock()
 		let value = block()
 		unlock()

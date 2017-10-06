@@ -58,11 +58,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="154" id="CcX-hY-S8t" customClass="ArticleTableViewCell" customModule="News_App" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="articleCell" rowHeight="154" id="CcX-hY-S8t" customClass="ArticleTableViewCell" customModule="News_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="154"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CcX-hY-S8t" id="iSt-cB-HHE">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="154"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="153.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YRq-LC-nu9">
@@ -96,7 +96,6 @@
                                 <connections>
                                     <outlet property="authorLabel" destination="Nmd-xI-B3u" id="lP1-7X-4kP"/>
                                     <outlet property="img" destination="YRq-LC-nu9" id="whj-V8-lNS"/>
-                                    <outlet property="sfga" destination="YRq-LC-nu9" id="iNz-r0-CL9"/>
                                     <outlet property="titleLabel" destination="fqi-c3-ErN" id="jIq-gq-Hkd"/>
                                 </connections>
                             </tableViewCell>

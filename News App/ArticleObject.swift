@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import JSONJoy
 
 class ArticleObject: NSObject {
 
-    var headline: String?
-    var author: String?
+    var id: Int?
+    var title: String?
     var body: String?
+    var author: String?
     var imageUrl: String?
+    
 }
