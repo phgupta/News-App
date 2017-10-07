@@ -17,6 +17,8 @@
 		C9C877721F6DECA20029C3D0 /* ArticleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C877711F6DECA20029C3D0 /* ArticleTableViewController.swift */; };
 		C9C877741F6DECC20029C3D0 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C877731F6DECC20029C3D0 /* ArticleTableViewCell.swift */; };
 		C9C877761F6DF3180029C3D0 /* ArticleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C877751F6DF3180029C3D0 /* ArticleObject.swift */; };
+		E673A6551F8759BB004F7424 /* StoryDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673A6541F8759BB004F7424 /* StoryDisplayViewController.swift */; };
+		E673A6571F875A04004F7424 /* Unknown in Resources */ = {isa = PBXBuildFile; fileRef = E673A6561F875A04004F7424 /* Unknown */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		C9C877711F6DECA20029C3D0 /* ArticleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleTableViewController.swift; sourceTree = "<group>"; };
 		C9C877731F6DECC20029C3D0 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		C9C877751F6DF3180029C3D0 /* ArticleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleObject.swift; sourceTree = "<group>"; };
+		E673A6541F8759BB004F7424 /* StoryDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDisplayViewController.swift; sourceTree = "<group>"; };
+		E673A6561F875A04004F7424 /* Unknown */ = {isa = PBXFileReference; lastKnownFileType = file; name = Unknown; path = ../../Unknown; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +86,10 @@
 				C98FEE0A1F6DD9C600906CA7 /* ViewController.swift */,
 				C9C877751F6DF3180029C3D0 /* ArticleObject.swift */,
 				C9C877711F6DECA20029C3D0 /* ArticleTableViewController.swift */,
+				E673A6541F8759BB004F7424 /* StoryDisplayViewController.swift */,
 				C9C877731F6DECC20029C3D0 /* ArticleTableViewCell.swift */,
 				C98FEE0C1F6DD9C600906CA7 /* Main.storyboard */,
+				E673A6561F875A04004F7424 /* Unknown */,
 				C98FEE121F6DD9C600906CA7 /* Assets.xcassets */,
 				C98FEE141F6DD9C600906CA7 /* LaunchScreen.storyboard */,
 				C98FEE171F6DD9C600906CA7 /* Info.plist */,
@@ -166,6 +172,7 @@
 				C98FEE161F6DD9C600906CA7 /* LaunchScreen.storyboard in Resources */,
 				C98FEE131F6DD9C600906CA7 /* Assets.xcassets in Resources */,
 				C98FEE0E1F6DD9C600906CA7 /* Main.storyboard in Resources */,
+				E673A6571F875A04004F7424 /* Unknown in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +244,7 @@
 				C98FEE0B1F6DD9C600906CA7 /* ViewController.swift in Sources */,
 				C98FEE091F6DD9C600906CA7 /* AppDelegate.swift in Sources */,
 				C98FEE111F6DD9C600906CA7 /* News_App.xcdatamodeld in Sources */,
+				E673A6551F8759BB004F7424 /* StoryDisplayViewController.swift in Sources */,
 				C9C877761F6DF3180029C3D0 /* ArticleObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
