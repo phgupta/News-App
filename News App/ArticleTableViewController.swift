@@ -8,29 +8,36 @@
 
 import UIKit
 
-let globalVariable = "mystring"
-
 class ArticleTableViewController: UITableViewController {
     
     // Outlets
     @IBOutlet var articleTableView: UITableView!
 
+    
+    // Global Variables
     var articles: [ArticleObject]? = []
     var activeRow = 0
     var activeSource = 0
+    
+    
+    // Default functions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        fetchArticles()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      //  print("PRINT ARTICLE COUNT: ", articles?.count ?? "Table article count is 0")
         return articles?.count ?? 0
     }
 
@@ -39,7 +46,7 @@ class ArticleTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as! ArticleTableViewCell
         cell.titleLabel.text = articles?[indexPath.item].title
         cell.authorLabel.text = articles?[indexPath.item].author
-       // cell.img.downloadImage(from: (articles?[indexPath.item].imageUrl!)!)
+        cell.img.downloadImage(from: (articles?[indexPath.item].imageUrl!)!)
 
         return cell
     }
@@ -47,16 +54,7 @@ class ArticleTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         activeRow = indexPath.row
-       // print ("I SELECTED ROW: ", activeRow)
-        print ("I SELECTED SOURCE: ", activeSource)
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-       // print("Value of Active Row is: ", activeRow)
-        // Fetches Articles from AylienAPI
-        fetchArticles()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -105,9 +103,18 @@ class ArticleTableViewController: UITableViewController {
                         article.title = articleFromJSON["title"] as? String
                         article.body = articleFromJSON["body"] as? String
                         
-//                        for item in (articleFromJSON["media"] as? NSArray)! {
-//                            print ("ITEM url: ", (item as AnyObject).url)
-//                        }
+                        let item = articleFromJSON["media"] as? NSArray
+                        let firstElement = item?.object(at: 0)
+                        if let dict = (firstElement as? [String:Any]) {
+                            
+                            if let url = dict["url"] as? String {
+                                article.imageUrl = url
+                            } else {
+                                print("Error")
+                            }
+                        } else {
+                            print("Error")
+                        }
                         self.articles?.append(article)
                     }
                 }
