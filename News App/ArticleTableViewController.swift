@@ -17,6 +17,7 @@ class ArticleTableViewController: UITableViewController {
 
     var articles: [ArticleObject]? = []
     var activeRow = 0
+    var activeSource = 0
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -29,7 +30,7 @@ class ArticleTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("PRINT ARTICLE COUNT: ", articles?.count ?? "Table article count is 0")
+      //  print("PRINT ARTICLE COUNT: ", articles?.count ?? "Table article count is 0")
         return articles?.count ?? 0
     }
 
@@ -46,13 +47,14 @@ class ArticleTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         activeRow = indexPath.row
-        print ("I SELECTED ROW: ", activeRow)
+       // print ("I SELECTED ROW: ", activeRow)
+        print ("I SELECTED SOURCE: ", activeSource)
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Value of Active Row is: ", activeRow)
+       // print("Value of Active Row is: ", activeRow)
         // Fetches Articles from AylienAPI
         fetchArticles()
     }

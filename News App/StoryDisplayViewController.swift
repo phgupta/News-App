@@ -13,13 +13,12 @@ class StoryDisplayViewController: UIViewController {
     var activeRow = 0
     var articles: [ArticleObject]? = []
     var username = "mystring"
+
+    @IBOutlet weak var articleTitle: UITextView!
     @IBOutlet weak var textbody: UITextView!
-    @IBOutlet weak var storybody: UILabel!
-    @IBOutlet weak var storyimg: UIImageView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("story display active row: ", activeRow)
+        articleTitle.text = articles![activeRow].title
         textbody.text = articles![activeRow].body
         // Do any additional setup after loading the view.
     }
