@@ -10,14 +10,21 @@ import UIKit
 
 class StoryDisplayViewController: UIViewController {
 
+    // Global Variables
     var activeRow = 0
     var articles: [ArticleObject]? = []
     var username = "mystring"
 
+    
+    // Outlets
     @IBOutlet weak var articleTitle: UITextView!
     @IBOutlet weak var textbody: UITextView!
+    
+    
+    // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         articleTitle.text = articles![activeRow].title
         textbody.text = articles![activeRow].body
         // Do any additional setup after loading the view.

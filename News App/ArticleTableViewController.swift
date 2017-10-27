@@ -59,7 +59,7 @@ class ArticleTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "toStoryDisplayViewController" {
+        if (segue.identifier == "toStoryDisplayViewController") {
         
             let storyDisplayViewController = segue.destination as! StoryDisplayViewController
             
@@ -77,7 +77,7 @@ class ArticleTableViewController: UITableViewController {
         
         var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&source.name%5B%5D=The%20New%20York%20Times&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
         
-        let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : "15c136e0", "X-AYLIEN-NewsAPI-Application-Key" : "15c7da7bb8d73f21f0af9bf5ef6d2539"] as Dictionary<String, String>
+        let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " abc52218", "X-AYLIEN-NewsAPI-Application-Key" : " 0a3f0e6a0ff13608b56a5a841698c24a"] as Dictionary<String, String>
         urlRequest.allHTTPHeaderFields = headerFields
         
         
