@@ -47,7 +47,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         collectionView.dataSource = self
         // Do any additional setup after loading the view.
         
-//        print ("Unshuffled Images: ", images)
+        print ("Unshuffled Images: ", images)
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -86,48 +86,55 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     // Custom functions
     func biasing(index: Int) {
 
-        images.shuffle()
+//        images.shuffle()
 //        print ("Shuffled Images: ", images)
         
         // Liberal Source Chosen
         if (categorizer[images[index]] == "L") {
-            for (i, image) in images.enumerated() {
-                if (categorizer[image] == "C") {
+            
+            if (lCount < 12) {
+                for (i, image) in images.enumerated() {
                     
-                    // Remove conservative source & add to conservativeImages
-                    conservativeImages.append(image)
-                    
-                    // Add liberal source from liberalImages
-                    images[i] = liberalImages[0]
-                    
-                    lCount += 1
-                    cCount -= 1
-                    
-                    break
+                    if (categorizer[image] == "C") {
+                        
+                        // Remove conservative source & add to conservativeImages
+                        conservativeImages.append(image)
+                        
+                        // Add liberal source from liberalImages
+                        images[i] = liberalImages[0]
+                        
+                        lCount += 1
+                        cCount -= 1
+                        
+                        break
+                    }
                 }
             }
         }
 
         // Conservative Source Chosen
         else {
-            for (i, image) in images.enumerated() {
-                if (categorizer[image] == "L") {
-                    
-                    // Remove liberal source & add to liberalImages
-                    liberalImages.append(image)
-                    
-                    // Add conservative source from conservativeImages
-                    images[i] = conservativeImages[0]
-                    
-                    lCount -= 1
-                    cCount += 1
-                    
-                    break
+            
+            if (cCount < 12) {
+                for (i, image) in images.enumerated() {
+                    if (categorizer[image] == "L") {
+                        
+                        // Remove liberal source & add to liberalImages
+                        liberalImages.append(image)
+                        
+                        // Add conservative source from conservativeImages
+                        images[i] = conservativeImages[0]
+                        
+                        lCount -= 1
+                        cCount += 1
+                        
+                        break
+                    }
                 }
             }
         }
         
-//        print ("Biased Images: ", images)
+        print ("Biased Images: ", images)
     }
     
     
