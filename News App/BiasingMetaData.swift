@@ -11,13 +11,13 @@ import UIKit
 class BiasingMetaData: NSObject {
 
     // Data members
-    var categorizer = ["breitbart": "C", "foxnews": "C", "drudgereport": "C", "dailycaller": "C", "washingtontimes": "C", "townhall": "C", "thehill": "C", "newyorkpost": "C", "wnd": "C", "zerohedge": "C", "theblaze": "C", "nationalreview": "C",
-        "msnbc": "L", "thenewyorker": "L", "cnn": "L", "huffingtonpost": "L", "politico": "L", "nytimes": "L", "cnsnews": "L", "washingtonpost": "L", "nbcnews": "L", "dailykos": "L", "vox": "L", "thenation": "L"]
+    var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Town Hall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C",
+        "MSNBC": "L", "New Yorker": "L", "CNN": "L", "Huffington Post": "L", "Politico": "L", "The New York Times": "L", "Washington Post": "L", "NBC News": "L", "Daily Kos": "L", "Vox": "L", "The Nation": "L"]
     
-    var liberalSources = ["msnbc", "thenewyorker", "cnn", "huffingtonpost", "politico", "nytimes",
-                          "cnsnews", "washingtonpost", "nbcnews", "dailykos", "vox", "thenation"]
-    var conservativeSources = ["breitbart", "foxnews", "drudgereport", "dailycaller", "washingtontimes", "townhall",
-                               "thehill", "newyorkpost", "wnd", "zerohedge", "theblaze", "nationalreview"]
+    var liberalSources = ["MSNBC", "New Yorker", "CNN", "Huffington Post", "Politico", "The New York Times",
+                          "Washington Post", "NBC News", "Daily Kos", "Vox", "The Nation"]
+    var conservativeSources = ["Breitbart", "Fox News", "Drudge Report", "Daily Caller", "Washington Times", "Town Hall",
+                               "The Hill", "New York Post", "Zero Hedge", "The Blaze", "National Review"]
     var activeSources = [String]()
     
     // Keeps a score of how liberal the user is
@@ -31,7 +31,7 @@ class BiasingMetaData: NSObject {
         liberalSources.shuffle()
         conservativeSources.shuffle()
         
-        for i in 0...11 {
+        for i in 0...10 {
             let rand = Int(arc4random_uniform(101))
             
             if (rand < biasingScore) {

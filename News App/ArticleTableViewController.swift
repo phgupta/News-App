@@ -18,6 +18,7 @@ class ArticleTableViewController: UITableViewController {
     var articles: [ArticleObject]? = []
     var activeRow = 0
     var activeSource = 0
+    var sourcename = ""
     
     
     // Default functions
@@ -71,42 +72,41 @@ class ArticleTableViewController: UITableViewController {
     
     // Custom functions
     func fetchArticles() {
-        
-        // Articles array
+        print("Source is - ", sourcename)
         articles = [ArticleObject]()
-        
-        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&source.name%5B%5D=The%20New%20York%20Times&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
-        
+        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.videos.count.max=0&source.name%5B%5D=" + sourcename.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
+
         let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " abc52218", "X-AYLIEN-NewsAPI-Application-Key" : " 0a3f0e6a0ff13608b56a5a841698c24a"] as Dictionary<String, String>
         urlRequest.allHTTPHeaderFields = headerFields
-        
-        
+
+
         let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            
+
             if (error != nil) {
                 print(error!)
             }
-            
+
             do {
-                
+
                 let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String:AnyObject]
-                
+
                 if let articlesFromJSON = json["stories"] as? [[String: AnyObject]] {
-                    
+
                     for articleFromJSON in articlesFromJSON {
-                        
+
                         // Creating an instance of ArticleObject
                         let article = ArticleObject()
-                        
+
                         // Change below to if let article.author = xyz..., article.title = xyz...
                         article.author = articleFromJSON["author"]?["name"] as? String
                         article.title = articleFromJSON["title"] as? String
                         article.body = articleFromJSON["body"] as? String
-                        
+                        article.wordcount = articleFromJSON["words_count"] as? Int
+                        article.published_at = articleFromJSON["published_at"] as? String
                         let item = articleFromJSON["media"] as? NSArray
                         let firstElement = item?.object(at: 0)
                         if let dict = (firstElement as? [String:Any]) {
-                            
+
                             if let url = dict["url"] as? String {
                                 article.imageUrl = url
                             } else {
@@ -118,7 +118,7 @@ class ArticleTableViewController: UITableViewController {
                         self.articles?.append(article)
                     }
                 }
-                
+
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -127,7 +127,7 @@ class ArticleTableViewController: UITableViewController {
                 print (error)
             }
         }
-        
+
         task.resume()
     }
 }

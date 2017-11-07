@@ -11,7 +11,7 @@ import UIKit
 // Global Variable
 let biaser = BiasingMetaData()
 
-class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     // CHECK: Update sources list with "Sources List" excel sheet
     
@@ -44,10 +44,14 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourcesCell", for: indexPath) as! SourcesCell
+        cell.layer.borderColor = UIColor.black.cgColor
+        cell.layer.borderWidth = 3
         cell.myImage.image = UIImage(named: biaser.activeSources[indexPath.row])
+        cell.myImage.contentMode = .scaleAspectFit
         
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         activeSource = indexPath.row
@@ -69,6 +73,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             
             let articleDisplayViewController = segue.destination as! ArticleTableViewController
             articleDisplayViewController.activeSource = activeSource
+            articleDisplayViewController.sourcename = biaser.activeSources[activeSource]
         }
     }
     

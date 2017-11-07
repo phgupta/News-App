@@ -147,7 +147,8 @@
 				TargetAttributes = {
 					C98FEE041F6DD9C600906CA7 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 86W858QGA8;
+						DevelopmentTeam = AD7F46RW46;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -377,12 +378,13 @@
 			baseConfigurationReference = 67D3B2C950EA2E2B78F92884 /* Pods-News App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 86W858QGA8;
+				DEVELOPMENT_TEAM = AD7F46RW46;
 				INFOPLIST_FILE = "News App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pranavhgupta.News-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -391,12 +393,13 @@
 			baseConfigurationReference = 4D1D1925D62EC60D6733754A /* Pods-News App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 86W858QGA8;
+				DEVELOPMENT_TEAM = AD7F46RW46;
 				INFOPLIST_FILE = "News App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pranavhgupta.News-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

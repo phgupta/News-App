@@ -17,16 +17,12 @@ class StoryDisplayViewController: UIViewController {
     
     //Outlets
     
-    @IBAction func backbuttonPressed(_ sender: Any) {
-        performSegue(withIdentifier: "backButtonArticleVC", sender: nil)
-    }
-    
+    @IBOutlet weak var articleImage: UIImageView!
+    @IBOutlet weak var textbody: UITextView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var articleTitle: UILabel!
-    @IBOutlet weak var textbody: UILabel!
-    @IBOutlet weak var articleImage: UIImageView!
-    
-    // Default functions
+    //    // Default functions
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,13 +38,6 @@ class StoryDisplayViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "backButtonArticleVC") {
-            
-            let articleDisplayViewController = segue.destination as! ArticleTableViewController
-        }
-    }
     
     /*
      // MARK: - Navigation
