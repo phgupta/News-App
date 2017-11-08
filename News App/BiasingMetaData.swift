@@ -11,12 +11,12 @@ import UIKit
 class BiasingMetaData: NSObject {
 
     // Data members
-    var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Town Hall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C",
+    var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Townhall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C",
         "MSNBC": "L", "New Yorker": "L", "CNN": "L", "Huffington Post": "L", "Politico": "L", "The New York Times": "L", "Washington Post": "L", "NBC News": "L", "Daily Kos": "L", "Vox": "L", "The Nation": "L"]
     
     var liberalSources = ["MSNBC", "New Yorker", "CNN", "Huffington Post", "Politico", "The New York Times",
                           "Washington Post", "NBC News", "Daily Kos", "Vox", "The Nation"]
-    var conservativeSources = ["Breitbart", "Fox News", "Drudge Report", "Daily Caller", "Washington Times", "Town Hall",
+    var conservativeSources = ["Breitbart", "Fox News", "Drudge Report", "Daily Caller", "Washington Times", "Townhall",
                                "The Hill", "New York Post", "Zero Hedge", "The Blaze", "National Review"]
     var activeSources = [String]()
     

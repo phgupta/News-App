@@ -74,7 +74,7 @@ class ArticleTableViewController: UITableViewController {
     func fetchArticles() {
         print("Source is - ", sourcename)
         articles = [ArticleObject]()
-        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.videos.count.max=0&source.name%5B%5D=" + sourcename.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
+        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + sourcename.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
 
         let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " abc52218", "X-AYLIEN-NewsAPI-Application-Key" : " 0a3f0e6a0ff13608b56a5a841698c24a"] as Dictionary<String, String>
         urlRequest.allHTTPHeaderFields = headerFields
@@ -115,7 +115,10 @@ class ArticleTableViewController: UITableViewController {
                         } else {
                             print("Error")
                         }
-                        self.articles?.append(article)
+                        if article.wordcount! > 100 && (self.articles?.count)! < 5 {
+                            self.articles?.append(article)
+                        }
+                        else {print("dank memes")}
                     }
                 }
 
