@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import Firebase
 
-// Global Variable
+// Global Variables
 let biaser = BiasingMetaData()
+var uniqueID: String = ""
+var sourceNum: Int = 0
+var articleNum: Int = 0
 
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    // CHECK: Update sources list with "Sources List" excel sheet
     
     // Outlets
     @IBOutlet weak var collectionView: UICollectionView!
@@ -21,20 +23,34 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     // Global Variables
     var activeSource = 0
+    var ref: DatabaseReference!
     
 
     // Default functions
     override func viewDidLoad() {
-        super.viewDidLoad()
         
+        super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        ref = Database.database().reference()
         
         // Implement biasing everytime SourcesVC is loaded.
         biaser.implementBiasing()
         
-        print("biaser.activeSources: ", biaser.activeSources)
-        print("biaser.biasingScore: ", biaser.biasingScore)
+        // Create uniqueID only once
+        if (uniqueID.isEmpty) {
+            let reference = ref?.childByAutoId()
+            uniqueID = (reference?.key)!
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        // Implement biasing everytime SourcesVC is loaded.
+        biaser.implementBiasing()
+        sourceNum += 1
+        articleNum = 0
+        self.collectionView!.reloadData()
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -52,8 +68,8 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         return cell
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         activeSource = indexPath.row
         
         if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
@@ -72,8 +88,18 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         if (segue.identifier == "toArticleTableViewController") {
             
             let articleDisplayViewController = segue.destination as! ArticleTableViewController
+            
+            // Pass variables through segue
             articleDisplayViewController.activeSource = activeSource
+            articleDisplayViewController.sourceNum = sourceNum
+            articleDisplayViewController.articleNum = articleNum
+            articleDisplayViewController.ref = ref
             articleDisplayViewController.sourcename = biaser.activeSources[activeSource]
+            
+            // Push source name, timestamp and position to database
+            self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
+            self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
+            // ADD: Source timestamp
         }
     }
     

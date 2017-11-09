@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ArticleTableViewController: UITableViewController {
     
@@ -14,17 +15,26 @@ class ArticleTableViewController: UITableViewController {
     @IBOutlet var articleTableView: UITableView!
 
     
-    // Global Variables
+    // Variables
     var articles: [ArticleObject]? = []
     var activeRow = 0
     var activeSource = 0
     var sourcename = ""
+    var sourceNum: Int = 0
+    var articleNum: Int = 0
+    var ref: DatabaseReference!
     
     
     // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchArticles()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        // For pushing into database
+        articleNum += 1
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,7 +64,14 @@ class ArticleTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // Pass variables through segue
         activeRow = indexPath.row
+        
+        // Push article name, timestamp, time spent and position to database
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue("Add headline here")
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue("Add position here")
+        // ADD: Article timestamp and time spent
+        
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }
     
@@ -74,7 +91,7 @@ class ArticleTableViewController: UITableViewController {
     func fetchArticles() {
         print("Source is - ", sourcename)
         articles = [ArticleObject]()
-        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + sourcename.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=5")!)
+        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + sourcename.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=15")!)
 
         let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " abc52218", "X-AYLIEN-NewsAPI-Application-Key" : " 0a3f0e6a0ff13608b56a5a841698c24a"] as Dictionary<String, String>
         urlRequest.allHTTPHeaderFields = headerFields
