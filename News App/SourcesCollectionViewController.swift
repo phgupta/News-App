@@ -8,12 +8,14 @@
 
 import UIKit
 import Firebase
+import CoreData
 
 // Global Variables
 let biaser = BiasingMetaData()
 var uniqueID: String = ""
 var sourceNum: Int = 0
 var articleNum: Int = 0
+
 
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -33,6 +35,13 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
+        
+        
         ref = Database.database().reference()
         
         // Implement biasing everytime SourcesVC is loaded.
@@ -42,9 +51,18 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         if (uniqueID.isEmpty) {
             let reference = ref?.childByAutoId()
             uniqueID = (reference?.key)!
-        }
+            newUser.setValue(uniqueID, forKey: "Username")
+            newUser.setValue(biaser.biasingScore, forKey: "biasingscore")
+            do {
+                
+                try context.save()
+                print("Saved")
+                
+            } catch {
+                print("Error!")
+            }
     }
-    
+}
     override func viewDidAppear(_ animated: Bool) {
         // Implement biasing everytime SourcesVC is loaded.
         biaser.implementBiasing()
@@ -72,6 +90,13 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         
         activeSource = indexPath.row
         
+        let date = NSDate()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
+        let pstTime = formatter.string(from: date as Date)
+        
+        
         if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
             biaser.lSourceClicked()
             print("biaser.biasingScore: ", biaser.biasingScore)
@@ -79,6 +104,11 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             biaser.cSourceClicked()
             print("biaser.biasingScore: ", biaser.biasingScore)
         }
+        
+        // Push source name, timestamp and position to database
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
         
         performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
     }
@@ -96,9 +126,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             articleDisplayViewController.ref = ref
             articleDisplayViewController.sourcename = biaser.activeSources[activeSource]
             
-            // Push source name, timestamp and position to database
-            self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
-            self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
+
             // ADD: Source timestamp
         }
     }

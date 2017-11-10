@@ -35,7 +35,15 @@ class ArticleTableViewController: UITableViewController {
         
         // For pushing into database
         articleNum += 1
+        
+        
+        if isBeingPresented || isMovingToParentViewController {
+            
+        } else {
+            // This controller is appearing because another was just dismissed
+        }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -66,11 +74,17 @@ class ArticleTableViewController: UITableViewController {
         
         // Pass variables through segue
         activeRow = indexPath.row
+        let date = NSDate()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
+        let pstTime = formatter.string(from: date as Date)
         
         // Push article name, timestamp, time spent and position to database
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue("Add headline here")
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue("Add position here")
-        // ADD: Article timestamp and time spent
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue(articles?[activeRow].title)
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue(activeRow)
+        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Timestamp").setValue(pstTime)
+        
         
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }
