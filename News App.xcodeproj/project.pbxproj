@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		553FC4B30794060ABCAF8F65 /* Pods_News_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B27F6C304BEDCBB200C176E /* Pods_News_App.framework */; };
 		C929D2EE1FAFBA2700332FAA /* BiasingMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C929D2ED1FAFBA2700332FAA /* BiasingMetaData.swift */; };
-		C944218B1FBE92FC00F19242 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C944218A1FBE92FC00F19242 /* background.jpg */; };
 		C944218D1FBE957200F19242 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C944218C1FBE957200F19242 /* LoginViewController.swift */; };
 		C988BD8E1FB1569700ACBFC5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C988BD8D1FB1569600ACBFC5 /* GoogleService-Info.plist */; };
 		C98FEE091F6DD9C600906CA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98FEE081F6DD9C600906CA7 /* AppDelegate.swift */; };
@@ -31,7 +30,6 @@
 		67D3B2C950EA2E2B78F92884 /* Pods-News App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News App/Pods-News App.debug.xcconfig"; sourceTree = "<group>"; };
 		8B27F6C304BEDCBB200C176E /* Pods_News_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_News_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C929D2ED1FAFBA2700332FAA /* BiasingMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiasingMetaData.swift; sourceTree = "<group>"; };
-		C944218A1FBE92FC00F19242 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = background.jpg; path = ../../../background.jpg; sourceTree = "<group>"; };
 		C944218C1FBE957200F19242 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C988BD8D1FB1569600ACBFC5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C98FEE051F6DD9C600906CA7 /* News App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "News App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +99,6 @@
 				C9C877731F6DECC20029C3D0 /* ArticleTableViewCell.swift */,
 				C9C877751F6DF3180029C3D0 /* ArticleObject.swift */,
 				E673A6541F8759BB004F7424 /* StoryDisplayViewController.swift */,
-				C944218A1FBE92FC00F19242 /* background.jpg */,
 				C929D2ED1FAFBA2700332FAA /* BiasingMetaData.swift */,
 				C98FEE0C1F6DD9C600906CA7 /* Main.storyboard */,
 				C98FEE121F6DD9C600906CA7 /* Assets.xcassets */,
@@ -186,7 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C98FEE161F6DD9C600906CA7 /* LaunchScreen.storyboard in Resources */,
-				C944218B1FBE92FC00F19242 /* background.jpg in Resources */,
 				C988BD8E1FB1569700ACBFC5 /* GoogleService-Info.plist in Resources */,
 				C98FEE131F6DD9C600906CA7 /* Assets.xcassets in Resources */,
 				C98FEE0E1F6DD9C600906CA7 /* Main.storyboard in Resources */,
