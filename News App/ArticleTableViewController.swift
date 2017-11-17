@@ -33,11 +33,13 @@ class ArticleTableViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         
+        num += 1
+        
         // For pushing into database
         articleNum += 1
         
         
-        if isBeingPresented || isMovingToParentViewController {
+        if (isBeingPresented || isMovingToParentViewController) {
             
         } else {
             // This controller is appearing because another was just dismissed
@@ -81,9 +83,17 @@ class ArticleTableViewController: UITableViewController {
         let pstTime = formatter.string(from: date as Date)
         
         // Push article name, timestamp, time spent and position to database
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue(articles?[activeRow].title)
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue(activeRow)
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Timestamp").setValue(pstTime)
+        self.ref?.child(uniqueID).child(String(num)).child("Article Headline").setValue(articles?[activeRow].title)
+        self.ref?.child(uniqueID).child(String(num)).child("Article Position").setValue(activeRow)
+        self.ref?.child(uniqueID).child(String(num)).child("Article Timestamp").setValue(pstTime)
+        self.ref?.child(uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
+        
+//        self.ref?.child(uniqueID).child(String(num)).child("Article Name").setValue("")
+//        self.ref?.child(uniqueID).child(String(num)).child("Time spent").setValue("")
+        
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue(articles?[activeRow].title)
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue(activeRow)
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Timestamp").setValue(pstTime)
         
         
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)

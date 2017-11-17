@@ -13,6 +13,7 @@ import CoreData
 // Global Variables
 let biaser = BiasingMetaData()
 var uniqueID: String = ""
+var num: Int = 0
 var sourceNum: Int = 0
 var articleNum: Int = 0
 
@@ -36,11 +37,8 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         collectionView.dataSource = self
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
         let context = appDelegate.persistentContainer.viewContext
-        
         let newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
-        
         
         ref = Database.database().reference()
         
@@ -54,7 +52,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             newUser.setValue(uniqueID, forKey: "Username")
             newUser.setValue(biaser.biasingScore, forKey: "biasingscore")
             do {
-                
                 try context.save()
                 print("Saved")
                 
@@ -64,12 +61,13 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         }
 }
     override func viewDidAppear(_ animated: Bool) {
+        
         // Implement biasing everytime SourcesVC is loaded.
-    
-        biaser.implementBiasing()
+        //biaser.implementBiasing()
         sourceNum += 1
         articleNum = 0
-        self.collectionView!.reloadData()
+        num += 1
+        //self.collectionView!.reloadData()
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -97,7 +95,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
         let pstTime = formatter.string(from: date as Date)
         
-        
         if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
             biaser.lSourceClicked()
             print("biaser.biasingScore: ", biaser.biasingScore)
@@ -107,9 +104,15 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         }
         
         // Push source name, timestamp and position to database
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
-        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
+        self.ref?.child(uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
+        self.ref?.child(uniqueID).child(String(num)).child("Source Position").setValue(activeSource)
+        self.ref?.child(uniqueID).child(String(num)).child("Source Timestamp").setValue(pstTime)
+        
+        self.ref?.child(uniqueID).child(String(num)).child("Article Name").setValue("")
+        self.ref?.child(uniqueID).child(String(num)).child("Time spent").setValue("")
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
+//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
         
         performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
     }
@@ -126,7 +129,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             articleDisplayViewController.articleNum = articleNum
             articleDisplayViewController.ref = ref
             articleDisplayViewController.sourcename = biaser.activeSources[activeSource]
-            
 
             // ADD: Source timestamp
         }
@@ -136,8 +138,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
     
     /*
     // MARK: - Navigation
