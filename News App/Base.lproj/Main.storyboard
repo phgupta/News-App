@@ -13,6 +13,9 @@
         <array key="MarkerFeltThin.ttf">
             <string>MarkerFelt-Thin</string>
         </array>
+        <array key="MarkerFeltWide.ttf">
+            <string>MarkerFelt-Wide</string>
+        </array>
     </customFonts>
     <scenes>
         <!--Sources-->
@@ -77,12 +80,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="FcK-qU-Oyi" id="5j1-R5-65a"/>
-                        <segue destination="NwK-6Z-oWR" kind="show" identifier="toArticleTableViewController" id="7Ia-wL-vOJ"/>
+                        <segue destination="NwK-6Z-oWR" kind="showDetail" identifier="toArticleTableViewController" action="showViewController:sender:" id="7Ia-wL-vOJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n9G-Ob-AFF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="186" y="113"/>
+            <point key="canvasLocation" x="284" y="102"/>
         </scene>
         <!--Articles-->
         <scene sceneID="dzX-gG-40Y">
@@ -151,12 +154,12 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="articleTableView" destination="vH2-sJ-H2S" id="L1V-kZ-0Cs"/>
-                        <segue destination="v1a-fI-lNj" kind="show" identifier="toStoryDisplayViewController" id="75k-Lg-UT0"/>
+                        <segue destination="v1a-fI-lNj" kind="showDetail" identifier="toStoryDisplayViewController" action="showViewController:sender:" id="75k-Lg-UT0"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tUS-sQ-lgg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1109.5999999999999" y="112.89355322338831"/>
+            <point key="canvasLocation" x="1153" y="102"/>
         </scene>
         <!--Story Display View Controller-->
         <scene sceneID="LVr-i1-EP6">
@@ -171,7 +174,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IvE-vy-IF8">
-                                <rect key="frame" x="0.0" y="64" width="375" height="1636"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="1680"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ER-Au-8ey">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1700"/>
@@ -236,6 +239,68 @@
             </objects>
             <point key="canvasLocation" x="1956" y="101.64917541229386"/>
         </scene>
+        <!--Login View Controller-->
+        <scene sceneID="8FI-2g-cql">
+            <objects>
+                <viewController id="Ijv-YA-6vt" customClass="LoginViewController" customModule="News_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="veI-jn-L11"/>
+                        <viewControllerLayoutGuide type="bottom" id="GRq-nv-NXj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SJu-ye-fp2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ApH-Y3-WUS">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="NEWS APP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bl9-5y-ceP">
+                                <rect key="frame" x="10" y="116" width="349" height="141"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ENTER YOUR NAME" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-2Y-eJl">
+                                <rect key="frame" x="5" y="291" width="365" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="17"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dbf-xT-R90">
+                                <rect key="frame" x="117" y="351" width="122" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="27"/>
+                                <state key="normal" title="SUBMIT">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="submitPressed:" destination="Ijv-YA-6vt" eventType="touchUpInside" id="Vz0-Oo-LaW"/>
+                                    <segue destination="ulz-tB-ZnC" kind="show" id="ttx-8C-1Qv"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ApH-Y3-WUS" firstAttribute="bottom" secondItem="GRq-nv-NXj" secondAttribute="top" id="DSI-t1-sEy"/>
+                            <constraint firstAttribute="trailing" secondItem="ApH-Y3-WUS" secondAttribute="trailing" id="Hs8-5N-4ro"/>
+                            <constraint firstItem="ApH-Y3-WUS" firstAttribute="top" secondItem="SJu-ye-fp2" secondAttribute="top" id="ajb-Xf-aGg"/>
+                            <constraint firstItem="ApH-Y3-WUS" firstAttribute="leading" secondItem="SJu-ye-fp2" secondAttribute="leading" id="oDv-nx-g5u"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="22y-NP-Iyk"/>
+                    <connections>
+                        <outlet property="name" destination="6rx-2Y-eJl" id="8q0-CT-Ybu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DJe-r6-cLD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-519.20000000000005" y="101.19940029985008"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="zQ5-HM-qQe">
             <objects>
@@ -247,12 +312,15 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="ulz-tB-ZnC" kind="relationship" relationship="rootViewController" id="z21-j2-M3k"/>
+                        <segue destination="Ijv-YA-6vt" kind="relationship" relationship="rootViewController" id="nX9-Ry-5Kg"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KgD-bZ-bP1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-660" y="113"/>
+            <point key="canvasLocation" x="-1257" y="102"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="background.jpg" width="1000" height="1498"/>
+    </resources>
 </document>

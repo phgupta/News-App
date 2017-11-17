@@ -16,7 +16,6 @@ var uniqueID: String = ""
 var sourceNum: Int = 0
 var articleNum: Int = 0
 
-
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // Outlets
@@ -26,7 +25,8 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     // Global Variables
     var activeSource = 0
     var ref: DatabaseReference!
-    
+    var name: String = ""
+    var first: Bool = true
 
     // Default functions
     override func viewDidLoad() {
@@ -61,10 +61,11 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             } catch {
                 print("Error!")
             }
-    }
+        }
 }
     override func viewDidAppear(_ animated: Bool) {
         // Implement biasing everytime SourcesVC is loaded.
+    
         biaser.implementBiasing()
         sourceNum += 1
         articleNum = 0
