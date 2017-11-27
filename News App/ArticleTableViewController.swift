@@ -31,22 +31,6 @@ class ArticleTableViewController: UITableViewController {
         fetchArticles()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        
-        num += 1
-        
-        // For pushing into database
-        articleNum += 1
-        
-        
-        if (isBeingPresented || isMovingToParentViewController) {
-            
-        } else {
-            // This controller is appearing because another was just dismissed
-        }
-    }
-    
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -76,6 +60,16 @@ class ArticleTableViewController: UITableViewController {
         
         // Pass variables through segue
         activeRow = indexPath.row
+        if (biaser.categorizer[biaser.activeSources[activeSource]] == "L") {
+            biaser.lArticleClicked()
+            UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
+            print("biaser.biasingScore: ", biaser.biasingScore)
+        } else {
+            biaser.cArticleClicked()
+            UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
+            print("biaser.biasingScore: ", biaser.biasingScore)
+        }
+        
         let date = NSDate()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
@@ -83,10 +77,10 @@ class ArticleTableViewController: UITableViewController {
         let pstTime = formatter.string(from: date as Date)
         
         // Push article name, timestamp, time spent and position to database
-        self.ref?.child(uniqueID).child(String(num)).child("Article Headline").setValue(articles?[activeRow].title)
-        self.ref?.child(uniqueID).child(String(num)).child("Article Position").setValue(activeRow)
-        self.ref?.child(uniqueID).child(String(num)).child("Article Timestamp").setValue(pstTime)
-        self.ref?.child(uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Headline").setValue(articles?[activeRow].title)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Position").setValue(activeRow)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Timestamp").setValue(pstTime)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
         
 //        self.ref?.child(uniqueID).child(String(num)).child("Article Name").setValue("")
 //        self.ref?.child(uniqueID).child(String(num)).child("Time spent").setValue("")

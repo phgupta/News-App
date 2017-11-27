@@ -8,14 +8,16 @@
 
 import UIKit
 import Firebase
-import CoreData
+//import CoreData
 
 // Global Variables
 let biaser = BiasingMetaData()
-var uniqueID: String = ""
+//var biaser.uniqueID: String = ""
 var num: Int = 0
 var sourceNum: Int = 0
 var articleNum: Int = 0
+let uniqueID = UserDefaults.standard.object(forKey: "UID")
+let scoreBiased = UserDefaults.standard.object(forKey: "SCORE")
 
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -36,29 +38,37 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
-        let newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
-        
+       
         ref = Database.database().reference()
         
         // Implement biasing everytime SourcesVC is loaded.
         biaser.implementBiasing()
         
-        // Create uniqueID only once
-        if (uniqueID.isEmpty) {
+
+       // let lastViewedDate = UserDefaults.standard.object(forKey: "DATE")
+        
+        if let uid = uniqueID as? String {
+            print("USER DEFAULT VALUE AlREADY SET. VALUE IS: ", uid)
             let reference = ref?.childByAutoId()
-            uniqueID = (reference?.key)!
-            newUser.setValue(uniqueID, forKey: "Username")
-            newUser.setValue(biaser.biasingScore, forKey: "biasingscore")
-            do {
-                try context.save()
-                print("Saved")
-                
-            } catch {
-                print("Error!")
-            }
+            biaser.uniqueID = (reference?.key)!
         }
+        
+        if let bScore = scoreBiased as? Int {
+            biaser.biasingScore = bScore
+            print("BIASING SCORE FOR THIS USER IS: ", bScore)
+        }
+            
+//        if let dateLastOpened = lastViewedDate as? Date {
+//            print("THIS USER OPENED THE APP ON: ", dateLastOpened)
+//        }
+        else {
+            let reference = ref?.childByAutoId()
+            biaser.uniqueID = (reference?.key)!
+            UserDefaults.standard.set(biaser.uniqueID, forKey: "UID")
+            // UserDefaults.standard.set(Date(), forKey: "DATE")
+            print("SETTING TO USER DEFAULT. VALUE IS: ", biaser.uniqueID)
+        }
+
 }
     override func viewDidAppear(_ animated: Bool) {
         
@@ -97,22 +107,24 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         
         if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
             biaser.lSourceClicked()
+            UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
             print("biaser.biasingScore: ", biaser.biasingScore)
         } else {
             biaser.cSourceClicked()
+            UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
             print("biaser.biasingScore: ", biaser.biasingScore)
         }
         
         // Push source name, timestamp and position to database
-        self.ref?.child(uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
-        self.ref?.child(uniqueID).child(String(num)).child("Source Position").setValue(activeSource)
-        self.ref?.child(uniqueID).child(String(num)).child("Source Timestamp").setValue(pstTime)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Position").setValue(activeSource)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Timestamp").setValue(pstTime)
         
-        self.ref?.child(uniqueID).child(String(num)).child("Article Name").setValue("")
-        self.ref?.child(uniqueID).child(String(num)).child("Time spent").setValue("")
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Name").setValue("")
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Time spent").setValue("")
+//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
+//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
+//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
         
         performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
     }
