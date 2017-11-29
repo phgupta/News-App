@@ -24,8 +24,9 @@ class StoryDisplayViewController: UIViewController {
     @IBOutlet weak var textbody: UITextView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var articleTitle: UILabel!
-    //    // Default functions
-   
+    
+    
+    // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
         dateFormatter()

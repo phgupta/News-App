@@ -35,6 +35,10 @@ class ArticleTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        num += 1
+    }
 
     
     // MARK: - Table view data source
@@ -81,14 +85,6 @@ class ArticleTableViewController: UITableViewController {
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Position").setValue(activeRow)
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Timestamp").setValue(pstTime)
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Name").setValue(biaser.activeSources[activeSource])
-        
-//        self.ref?.child(uniqueID).child(String(num)).child("Article Name").setValue("")
-//        self.ref?.child(uniqueID).child(String(num)).child("Time spent").setValue("")
-        
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Headline").setValue(articles?[activeRow].title)
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Position").setValue(activeRow)
-//        self.ref?.child(uniqueID).child("Source" + String(sourceNum)).child("Articles").child("Article" + String(articleNum)).child("Timestamp").setValue(pstTime)
-        
         
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }

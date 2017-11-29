@@ -27,6 +27,10 @@ class BiasingMetaData: NSObject {
     // Keeps a score of how liberal the user is
     var biasingScore = 50
     
+    // Added
+    var liberalScore = 6
+    var conservativeScore = -6
+    
     
     // Member Functions
     func implementBiasing() {
@@ -47,7 +51,11 @@ class BiasingMetaData: NSObject {
     }
     
     func lSourceClicked() {
-        biasingScore += 5
+        
+        if (liberalScore != 0) {
+            biasingScore += liberalScore
+            liberalScore -= 1
+        }
     }
     
     func lArticleClicked() {
@@ -55,7 +63,11 @@ class BiasingMetaData: NSObject {
     }
     
     func cSourceClicked() {
-        biasingScore -= 5
+        
+        if (conservativeScore != 0) {
+            biasingScore += conservativeScore
+            conservativeScore += 1
+        }
     }
     
     func cArticleClicked() {

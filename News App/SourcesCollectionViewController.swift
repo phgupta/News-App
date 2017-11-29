@@ -121,10 +121,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Source Timestamp").setValue(pstTime)
         
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Name").setValue("")
-        self.ref?.child(biaser.uniqueID).child(String(num)).child("Time spent").setValue("")
-//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Timestamp").setValue(pstTime)
-//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Name").setValue(biaser.activeSources[activeSource])
-//        self.ref?.child(biaser.uniqueID).child("Source" + String(sourceNum)).child("Position").setValue(activeSource)
+        self.ref?.child(biaser.uniqueID).child(String(num)).child("Time spent").setValue("00:00:02")
         
         performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
     }
