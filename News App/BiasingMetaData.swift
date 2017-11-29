@@ -74,6 +74,10 @@ class BiasingMetaData: NSObject {
         biasingScore -= 1
     }
     
+    func setBiasingScore(score: Int) {
+        biasingScore = score
+    }
+    
 }
 
 
