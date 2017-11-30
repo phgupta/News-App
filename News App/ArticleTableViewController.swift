@@ -36,10 +36,6 @@ class ArticleTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        num += 1
-    }
-
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -79,6 +75,9 @@ class ArticleTableViewController: UITableViewController {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
         formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
         let pstTime = formatter.string(from: date as Date)
+        
+        // Temporary.
+        num += 1
         
         // Push article name, timestamp, time spent and position to database
         self.ref?.child(biaser.uniqueID).child(String(num)).child("Article Headline").setValue(articles?[activeRow].title)

@@ -38,45 +38,70 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         collectionView.delegate = self
         collectionView.dataSource = self
         
-       
-        ref = Database.database().reference()
-        
-        // Implement biasing everytime SourcesVC is loaded.
-        biaser.implementBiasing()
-        
-
-       // let lastViewedDate = UserDefaults.standard.object(forKey: "DATE")
-        
-        if let uid = uniqueID as? String {
-            print("USER DEFAULT VALUE AlREADY SET. VALUE IS: ", uid)
-            let reference = ref?.childByAutoId()
-            biaser.uniqueID = (reference?.key)!
-        }
-        
-        if let bScore = scoreBiased as? Int {
-            biaser.biasingScore = bScore
-            print("BIASING SCORE FOR THIS USER IS: ", bScore)
-        }
-            
-//        if let dateLastOpened = lastViewedDate as? Date {
-//            print("THIS USER OPENED THE APP ON: ", dateLastOpened)
+//        ref = Database.database().reference()
+//
+//        // Implement biasing everytime SourcesVC is loaded.
+          biaser.implementBiasing()
+//
+//       // let lastViewedDate = UserDefaults.standard.object(forKey: "DATE")
+//
+//        if let uid = uniqueID as? String {
+//            print("VIEWDIDLOAD USER DEFAULT VALUE AlREADY SET. VALUE IS: ", uid)
+//            let reference = ref?.childByAutoId()
+//            biaser.uniqueID = (reference?.key)!
 //        }
-        else {
-            let reference = ref?.childByAutoId()
-            biaser.uniqueID = (reference?.key)!
-            UserDefaults.standard.set(biaser.uniqueID, forKey: "UID")
-            // UserDefaults.standard.set(Date(), forKey: "DATE")
-            print("SETTING TO USER DEFAULT. VALUE IS: ", biaser.uniqueID)
-        }
+//
+//        if let bScore = scoreBiased as? Int {
+//
+//            print("VIEWDIDLOAD BIASING SCORE FOR THIS USER IS: ", bScore)
+//        }
+//
+////        if let dateLastOpened = lastViewedDate as? Date {
+////            print("THIS USER OPENED THE APP ON: ", dateLastOpened)
+////        }
+//        else {
+//            let reference = ref?.childByAutoId()
+//            biaser.uniqueID = (reference?.key)!
+//            UserDefaults.standard.set(biaser.uniqueID, forKey: "UID")
+//            // UserDefaults.standard.set(Date(), forKey: "DATE")
+//            print("VIEWDIDLOAD SETTING TO USER DEFAULT. VALUE IS: ", biaser.uniqueID)
+//        }
 
 }
     override func viewDidAppear(_ animated: Bool) {
         
         // Implement biasing everytime SourcesVC is loaded.
-        //biaser.implementBiasing()
+       // biaser.implementBiasing()
         sourceNum += 1
         articleNum = 0
         num += 1
+        ref = Database.database().reference()
+        
+        // Implement biasing everytime SourcesVC is loaded.
+       // biaser.implementBiasing()
+        
+        // let lastViewedDate = UserDefaults.standard.object(forKey: "DATE")
+        
+        if let uid = uniqueID as? String {
+            print("VIEWDIDAPPEAR USER DEFAULT VALUE AlREADY SET. VALUE IS: ", uid)
+            let reference = ref?.childByAutoId()
+            biaser.uniqueID = (reference?.key)!
+        }
+        
+        if let bScore = scoreBiased as? Int {
+            print("VIEWDIDAPPEAR BIASING SCORE FOR THIS USER IS: ", biaser.biasingScore)
+        }
+            
+            //        if let dateLastOpened = lastViewedDate as? Date {
+            //            print("THIS USER OPENED THE APP ON: ", dateLastOpened)
+            //        }
+        else {
+            let reference = ref?.childByAutoId()
+            biaser.uniqueID = (reference?.key)!
+            UserDefaults.standard.set(biaser.uniqueID, forKey: "UID")
+            // UserDefaults.standard.set(Date(), forKey: "DATE")
+            print("VIEWDIDAPPEAR SETTING TO USER DEFAULT. VALUE IS: ", biaser.uniqueID)
+        }
         //self.collectionView!.reloadData()
     }
 
@@ -147,15 +172,5 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

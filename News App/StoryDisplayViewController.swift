@@ -18,7 +18,6 @@ class StoryDisplayViewController: UIViewController {
     var unformattedDate: String = ""
     
     //Outlets
-    
     @IBOutlet weak var dateDisplay: UILabel!
     @IBOutlet weak var articleImage: UIImageView!
     @IBOutlet weak var textbody: UITextView!
