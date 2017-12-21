@@ -14,8 +14,8 @@ class BiasingMetaData: NSObject {
     
     var uniqueID: String = ""
     
-    var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Townhall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C",
-                       "MSNBC": "L", "New Yorker": "L", "CNN": "L", "Huffington Post": "L", "Politico": "L", "The New York Times": "L", "Washington Post": "L", "NBC News": "L", "Daily Kos": "L", "Vox": "L", "The Nation": "L", "Slate": "L", "CNS News": "C"]
+    var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Townhall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C", "CNS News": "C",
+                       "MSNBC": "L", "New Yorker": "L", "CNN": "L", "Huffington Post": "L", "Politico": "L", "The New York Times": "L", "Washington Post": "L", "NBC News": "L", "Daily Kos": "L", "Vox": "L", "The Nation": "L", "Slate": "L"]
     
     var liberalSources = ["MSNBC", "New Yorker", "CNN", "Huffington Post", "Politico", "The New York Times",
                           "Washington Post", "NBC News", "Daily Kos", "Vox", "The Nation", "Slate"]

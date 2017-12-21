@@ -9,16 +9,45 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
+    
+    // Global variables
+    let NewsTagArray = ["0001", "0002", "0003"]
+    
+    
+    // Outlets
     @IBOutlet weak var name: UITextField!
     @IBAction func submitPressed(_ sender: Any) {
-        //performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
+        // Check for validity of NewsTag and switch to appropriate version.
+        
+        let versionNum = name.text!
+        switch versionNum {
+
+        case "0001":
+            print("Version 1: Current Version.")
+            UserDefaults.standard.set(1, forKey: "VersionNum")
+            UserDefaults.standard.set(versionNum, forKey: "UserID")
+            performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
+            
+        case "0002":
+            print("Version 2: Neutral Version.")
+            UserDefaults.standard.set(2, forKey: "VersionNum")
+            UserDefaults.standard.set(versionNum, forKey: "UserID")
+            performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
+
+        case "0003":
+            print("Version 3: 10-Day Version.")
+            UserDefaults.standard.set(3, forKey: "VersionNum")
+            UserDefaults.standard.set(versionNum, forKey: "UserID")
+            performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
+
+        default:
+            print("Error")
+        }
     }
+    
+    // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.navigationController?.setNavigationBarHidden(true, animated: false)
-        print ("LOGIN VC LOADED")
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -29,29 +58,8 @@ class LoginViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if (segue.identifier == "toArticleTableViewController") {
-//
-//            let collectionViewController = segue.destination as! SourcesCollectionViewController
-//
-//            collectionViewController.name = name.text!
-//        }
-//    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

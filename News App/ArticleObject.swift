@@ -9,7 +9,6 @@
 import UIKit
 
 class ArticleObject: NSObject {
-
     var id: Int?
     var title: String?
     var body: String?

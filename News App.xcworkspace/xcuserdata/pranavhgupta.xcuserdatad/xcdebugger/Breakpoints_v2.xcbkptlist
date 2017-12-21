@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "News App/ArticleTableViewController.swift"
-            timestampString = "533688537.157205"
+            timestampString = "535588329.831432"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
             landmarkName = "fetchArticles()"
             landmarkType = "7">
          </BreakpointContent>
