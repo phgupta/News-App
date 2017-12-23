@@ -18,23 +18,41 @@ class ArticleTableViewController: UITableViewController {
     // Variables
     var articles: [ArticleObject]? = []     // Object holding Articles
     var ref: DatabaseReference!             // Firebase reference
-    var entryNum: Int = -1                  // Database entry number
     
     var sourceName: String = "NYT"          // CHECK: Change Source Name's default value
     var sourcePos: Int = -1                 // Position of source clicked (0-11)
     var sourceTimestamp: String = "-"       // CHECK: Change Source Timestamp's default value
-    var sourceTimespent: String = "00:02"   // CHECK: Change Source Timespent's default value
     
     var articleName: String = "Trump"       // CHECK: Change Article Name's default value
     var articlePos: Int = -1                // Position of article clicked (0-...)
     var articleTimestamp: String = "-"      // CHECK: Change Article Timestamp's default value
-    var articleTimespent:String = "00:02"   // CHECK: Change Article Timespent's default value
+    var articleTimespent:String = ""        // CHECK: Change Article Timespent's default value
+    
+    // CHECK: All below variables required?
+    weak var timer: Timer?
+    var startTime: Double = 0.0
+    var time: Double = 0.0
+    var elapsed: Double = 0.0
+    var timerOn: Bool = false
     
     
     // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchArticles()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        // Add Source Timespent to Database
+        if (timerOn) {
+            timer?.invalidate()
+            timerOn = false
+            let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+            print ("ArticleVC EntryNum: ", entryNum)
+            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Timespent").setValue(articleTimespent)
+            timerOn = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -62,8 +80,13 @@ class ArticleTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // Start timer
+        startTime = Date().timeIntervalSinceReferenceDate - elapsed
+        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+        
         articlePos = indexPath.row
         articleTimestamp = getCurrentDate()
+        UserDefaults.standard.set(true, forKey: "ArticleClicked")
         
         if (biaser.categorizer[biaser.activeSources[sourcePos]] == "L") {
             biaser.lArticleClicked()
@@ -75,18 +98,17 @@ class ArticleTableViewController: UITableViewController {
             print("Biasing Score: ", biaser.biasingScore)
         }
         
-    
-        // Push source/article name, position, timestamp and timespent to database
-        entryNum += 1
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[sourcePos])
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Position").setValue(sourcePos)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timestamp").setValue(sourceTimestamp)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timespent").setValue(sourceTimespent)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Name").setValue(articles?[articlePos].title)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Position").setValue(articlePos)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Timestamp").setValue(articleTimestamp)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Timespent").setValue(biaser.activeSources[sourcePos])
+        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
         
+        // Push source/article name, position, timestamp and timespent to database
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Source Name").setValue(biaser.activeSources[sourcePos])
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Source Position").setValue(sourcePos)
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Source Timestamp").setValue(sourceTimestamp)
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Article Name").setValue(articles?[articlePos].title)
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Article Position").setValue(articlePos)
+        self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Article Timestamp").setValue(articleTimestamp)
+        
+        UserDefaults.standard.set(entryNum+1, forKey: "DatabaseEntryNum")
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }
     
@@ -171,6 +193,29 @@ class ArticleTableViewController: UITableViewController {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
         formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
         return formatter.string(from: date as Date)
+    }
+    
+    @objc func updateCounter() {
+        time = Date().timeIntervalSinceReferenceDate - startTime
+        
+        // Calculate minutes
+        let minutes = UInt8(time / 60.0)
+        time -= (TimeInterval(minutes) * 60)
+        
+        // Calculate seconds
+        let seconds = UInt8(time)
+        time -= TimeInterval(seconds)
+        
+        // Calculate milliseconds
+        let milliseconds = UInt8(time * 100)
+        
+        // Format time vars with leading zero
+        let strMinutes = String(format: "%02d", minutes)
+        let strSeconds = String(format: "%02d", seconds)
+        let strMilliseconds = String(format: "%02d", milliseconds)
+        
+        articleTimespent = strMinutes + ":" + strSeconds + ":" + strMilliseconds
+        timerOn = true
     }
 }
 

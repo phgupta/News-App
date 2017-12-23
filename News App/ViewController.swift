@@ -25,6 +25,8 @@ class ViewController: UIViewController {
 // 1. VersionNum: Int = [1, 2, 3]
 // 2. BiasingScore: Int = 0, 1, 2...100
 // 3. UserID: String
+// 4. DatabaseEntryNum: Int = 0, 1, 2...
+// 5. ArticleClicked: Bool
 
 //TO DO
 // 1. Store Biasing Score in User Defaults.
