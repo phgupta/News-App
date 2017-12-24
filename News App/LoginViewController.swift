@@ -17,31 +17,28 @@ class LoginViewController: UIViewController {
     // Outlets
     @IBOutlet weak var name: UITextField!
     @IBAction func submitPressed(_ sender: Any) {
-        // Check for validity of NewsTag and switch to appropriate version.
-        
-        let versionNum = name.text!
-        switch versionNum {
 
+        let versionNum = name.text!
+        
+        // Save version number and UserID to UserDefaults.
+        switch versionNum {
         case "0001":
-            print("Version 1: Current Version.")
             UserDefaults.standard.set(1, forKey: "VersionNum")
             UserDefaults.standard.set(versionNum, forKey: "UserID")
             performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
             
         case "0002":
-            print("Version 2: Neutral Version.")
             UserDefaults.standard.set(2, forKey: "VersionNum")
             UserDefaults.standard.set(versionNum, forKey: "UserID")
             performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
 
         case "0003":
-            print("Version 3: 10-Day Version.")
             UserDefaults.standard.set(3, forKey: "VersionNum")
             UserDefaults.standard.set(versionNum, forKey: "UserID")
             performSegue(withIdentifier: "toSourcesCollectionViewController", sender: Any?.self)
 
         default:
-            print("Error")
+            print("Error: Incorrect Tag.")
         }
     }
     

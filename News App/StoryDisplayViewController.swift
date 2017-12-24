@@ -13,7 +13,6 @@ class StoryDisplayViewController: UIViewController {
     // Variables
     var articles: [ArticleObject]? = []
     var articlePos: Int = -1
-    var username = "mystring"
     var date: String = ""
     var unformattedDate: String = ""
     
@@ -29,8 +28,8 @@ class StoryDisplayViewController: UIViewController {
     // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         dateFormatter()
+        
         authorLabel.text = articles![articlePos].author
         articleTitle.text = articles![articlePos].title
         textbody.text = articles![articlePos].body
@@ -58,67 +57,7 @@ class StoryDisplayViewController: UIViewController {
         let day = arr2[0]
         
         date = day + " " + month + " " + year
-        
-//        if (month == "01") {
-//            month = "January"
-//        }
-//
-//        else if (month == "02") {
-//            month = "February"
-//        }
-//
-//        else if (month == "03") {
-//            month = "March"
-//        }
-//
-//        else if (month == "04") {
-//            month = "April"
-//        }
-//
-//        else if (month == "05") {
-//            month = "May"
-//        }
-//
-//        else if (month == "06") {
-//            month = "June"
-//        }
-//
-//        else if (month == "07") {
-//            month = "July"
-//        }
-//
-//        else if (month == "08") {
-//            month = "August"
-//        }
-//
-//        else if (month == "09") {
-//            month = "September"
-//        }
-//
-//        else if (month == "10") {
-//            month = "October"
-//        }
-//
-//        else if (month == "11") {
-//            month = "November"
-//        }
-//
-//        else if (month == "12") {
-//            month = "December"
-//        }
-//        date = day + " " + month + " " + year
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 

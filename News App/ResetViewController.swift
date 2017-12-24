@@ -26,14 +26,14 @@ class ResetViewController: UIViewController {
     
     @IBAction func continuePressed(_ sender: Any) {
         print("Before pressing Continue: ", biaser.biasingScore)
-        UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
+        UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
         performSegue(withIdentifier: "toSourceViewController", sender: nil)
     }
     
     @IBAction func resetPressed(_ sender: Any) {
         biaser.biasingScore = 50
         print("Before pressing Reset: ", biaser.biasingScore)
-        UserDefaults.standard.set(biaser.biasingScore, forKey: "SCORE")
+        UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
         performSegue(withIdentifier: "toSourceViewController", sender: nil)
     }
     

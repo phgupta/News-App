@@ -19,20 +19,18 @@ class ArticleTableViewController: UITableViewController {
     var articles: [ArticleObject]? = []     // Object holding Articles
     var ref: DatabaseReference!             // Firebase reference
     
-    var sourceName: String = "NYT"          // CHECK: Change Source Name's default value
+    var sourceName: String = ""             // Source Name
     var sourcePos: Int = -1                 // Position of source clicked (0-11)
-    var sourceTimestamp: String = "-"       // CHECK: Change Source Timestamp's default value
+    var sourceTimestamp: String = ""        //  Source Timestamp
     
-    var articleName: String = "Trump"       // CHECK: Change Article Name's default value
+    var articleName: String = ""            // Article Name
     var articlePos: Int = -1                // Position of article clicked (0-...)
-    var articleTimestamp: String = "-"      // CHECK: Change Article Timestamp's default value
-    var articleTimespent:String = ""        // CHECK: Change Article Timespent's default value
+    var articleTimestamp: String = ""       // Article Timestamp
+    var articleTimespent:String = ""        // Article Timespent
     
-    // CHECK: All below variables required?
     weak var timer: Timer?
     var startTime: Double = 0.0
     var time: Double = 0.0
-    var elapsed: Double = 0.0
     var timerOn: Bool = false
     
     
@@ -49,7 +47,6 @@ class ArticleTableViewController: UITableViewController {
             timer?.invalidate()
             timerOn = false
             let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-            print ("ArticleVC EntryNum: ", entryNum)
             self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Article Timespent").setValue(articleTimespent)
             timerOn = false
         }
@@ -70,7 +67,6 @@ class ArticleTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as! ArticleTableViewCell
         cell.titleLabel.text = articles?[indexPath.item].title
         cell.authorLabel.text = articles?[indexPath.item].author
@@ -81,24 +77,30 @@ class ArticleTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Start timer
-        startTime = Date().timeIntervalSinceReferenceDate - elapsed
+        startTime = Date().timeIntervalSinceReferenceDate
         timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
         
         articlePos = indexPath.row
         articleTimestamp = getCurrentDate()
-        UserDefaults.standard.set(true, forKey: "ArticleClicked")
         
-        if (biaser.categorizer[biaser.activeSources[sourcePos]] == "L") {
-            biaser.lArticleClicked()
-            UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            print("Biasing Score: ", biaser.biasingScore)
-        } else {
-            biaser.cArticleClicked()
-            UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            print("Biasing Score: ", biaser.biasingScore)
-        }
-        
+        // Increment database entry number
         let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+        UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
+        
+        // Increment number of article's clicked within a source
+        let temp = UserDefaults.standard.integer(forKey: "NumArticleClicked")
+        UserDefaults.standard.set(temp + 1, forKey: "NumArticleClicked")
+        
+        // Change BiasingScore only for Version1
+        if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
+            if (biaser.categorizer[biaser.activeSources[sourcePos]] == "L") {
+                biaser.lArticleClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+            } else {
+                biaser.cArticleClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+            }
+        }
         
         // Push source/article name, position, timestamp and timespent to database
         self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Source Name").setValue(biaser.activeSources[sourcePos])
@@ -108,12 +110,10 @@ class ArticleTableViewController: UITableViewController {
         self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Article Position").setValue(articlePos)
         self.ref?.child(biaser.uniqueID).child(String(entryNum+1)).child("Article Timestamp").setValue(articleTimestamp)
         
-        UserDefaults.standard.set(entryNum+1, forKey: "DatabaseEntryNum")
         performSegue(withIdentifier: "toStoryDisplayViewController", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if (segue.identifier == "toStoryDisplayViewController") {
             let storyDisplayViewController = segue.destination as! StoryDisplayViewController
             storyDisplayViewController.articlePos = articlePos

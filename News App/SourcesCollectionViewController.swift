@@ -9,25 +9,19 @@
 import UIKit
 import Firebase
 
-
 // Global Variables
 let biaser = BiasingMetaData()
 
-
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
     
     // Variables
     var ref: DatabaseReference!             // Firebase reference
     var sourcePos: Int = -1                 // Position of source clicked (0-11)
-    var sourceTimestamp: String = ""        // CHECK: Change Source Timestamp's default value
-    var sourceTimespent: String = "00:02"   // CHECK: Change Source Timespent's default value
-    
-    // CHECK: All below variables required?
+    var sourceTimestamp: String = ""        // Source Timestamp
+    var sourceTimespent: String = ""        // Source Timespent
     weak var timer: Timer?
     var startTime: Double = 0.0
     var time: Double = 0.0
-    var elapsed: Double = 0.0
     var timerOn: Bool = false
     
     
@@ -41,7 +35,9 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         
         ref = Database.database().reference()
         biaser.uniqueID = String(describing: UserDefaults.standard.string(forKey: "UserID")!)
+        
         UserDefaults.standard.set(-1, forKey: "DatabaseEntryNum")
+        UserDefaults.standard.set(0, forKey: "NumArticleClicked")
         
         // Sets score to 50 and shuffles the sources list.
         biaser.implementBiasing()
@@ -49,40 +45,28 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     override func viewDidAppear(_ animated: Bool) {
         
-        // Add Source Timespent to Database
+        // Add Source Timespent to database if source has been clicked
         if (timerOn) {
             
             timer?.invalidate()
             timerOn = false
-            timerOn = false
-            print ("Source Timespent: ", sourceTimespent)
             
             let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-            print ("SourceVC EntryNum: ", entryNum)
-            let articleClicked = UserDefaults.standard.bool(forKey: "ArticleClicked")
+            let numArticleClicked = UserDefaults.standard.integer(forKey: "NumArticleClicked")
             
-            if (articleClicked) {
-                self.ref?.child(biaser.uniqueID).child(String(entryNum-1)).child("Source Timespent").setValue(sourceTimespent)
-                self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timespent").setValue(sourceTimespent)
-                UserDefaults.standard.set(false, forKey: "ArticleClicked")
-            } else {
-                self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timespent").setValue(sourceTimespent)
+            // Adds Source Timespent to all appropriate rows.
+            if (numArticleClicked > -1) {
+                for i in 0...numArticleClicked {
+                    self.ref?.child(biaser.uniqueID).child(String(entryNum - i)).child("Source Timespent").setValue(sourceTimespent)
+                }
+                
+                UserDefaults.standard.set(0, forKey: "NumArticleClicked")
             }
         }
         
-        // CHECK: If version1,2,3() don't have a lot of code, remove them then.
-        let versionNum = UserDefaults.standard.integer(forKey: "VersionNum")
-        switch versionNum {
-        case 1:
-            version1()
-        case 2:
-            version2()
-        case 3:
-            version3()
-        default:
-            print("Error: Version Number not stored in UserDefaults.")
-            break
-        }
+        // Increment DatabaseEntryNum
+        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+        UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -101,23 +85,23 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         // Start timer
-        startTime = Date().timeIntervalSinceReferenceDate - elapsed
+        startTime = Date().timeIntervalSinceReferenceDate
         timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
         
         sourcePos = indexPath.row
         sourceTimestamp = getCurrentDate()
-        
-        if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
-            biaser.lSourceClicked()
-            UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            print("Biasing Score: ", biaser.biasingScore)
-        } else {
-            biaser.cSourceClicked()
-            UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            print("Biasing Score: ", biaser.biasingScore)
-        }
-        
         let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+        
+        // Change BiasingScore only for Version1
+        if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
+            if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
+                biaser.lSourceClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+            } else {
+                biaser.cSourceClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+            }
+        }
         
         // Push source name, position, timestamp and timespent to database
         self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[sourcePos])
@@ -134,10 +118,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             
             // Pass variables through segue
             articleDisplayViewController.ref = ref                                      // Firebase reference
-            
-//            let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-//            articleDisplayViewController.entryNum = entryNum                            // User Entry Number
-            
             articleDisplayViewController.sourceName = biaser.activeSources[sourcePos]   // Source Name
             articleDisplayViewController.sourcePos = sourcePos                          // Source Position
             articleDisplayViewController.sourceTimestamp = sourceTimestamp              // Source Timestamp
@@ -151,24 +131,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
 
     
     // Custom functions
-    func version1() {
-        print("SourcesVC func version1()")
-        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-        UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
-    }
-    
-    func version2() {
-        print("SourcesVC func version2()")
-        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-        UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
-    }
-    
-    func version3() {
-        print("SourcesVC func version3()")
-        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-        UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
-    }
-    
     // CHECK: Below function is incorrect.
     func getCurrentDate() -> String {
         let date = NSDate()

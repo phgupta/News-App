@@ -9,7 +9,5 @@
 import UIKit
 
 class SourcesCell: UICollectionViewCell {
-
     @IBOutlet weak var myImage: UIImageView!
-    
 }
