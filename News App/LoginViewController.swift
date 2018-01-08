@@ -20,6 +20,8 @@ class LoginViewController: UIViewController {
 
         let versionNum = name.text!
         
+        // Only 0001, 0002 and 0003 which denote version1,2,3 for now are valid inputs.
+        // We need to change this to the valid usertags provided to us by Saif.
         // Save version number and UserID to UserDefaults.
         switch versionNum {
         case "0001":

@@ -42,6 +42,8 @@ class StoryDisplayViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // There was nothing wrong with the if statements you wrote! So many lines of code just bothered me and I changed it lol
+    // It does the same thing you did!
     func dateFormatter() {
         
         let months = ["01": "January", "02": "February","03": "March", "04": "April",

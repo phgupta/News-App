@@ -36,6 +36,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         ref = Database.database().reference()
         biaser.uniqueID = String(describing: UserDefaults.standard.string(forKey: "UserID")!)
         
+        // Initalizing database columns' initial values
         UserDefaults.standard.set(-1, forKey: "DatabaseEntryNum")
         UserDefaults.standard.set(0, forKey: "NumArticleClicked")
         
@@ -45,15 +46,23 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     override func viewDidAppear(_ animated: Bool) {
         
+        // This handles the case when the user clicks on a source and then returns back to the SourceVC screen
+        // timerOn is initially set to false. Once user clicks on a source, it's set to True and over here it checks whether
+        // timerOn is true or not.
         // Add Source Timespent to database if source has been clicked
         if (timerOn) {
             
+            // Stop the timer and make timerOn to false.
             timer?.invalidate()
             timerOn = false
             
             let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
             let numArticleClicked = UserDefaults.standard.integer(forKey: "NumArticleClicked")
             
+            // This complicated stuff is happening because we need to put "Source Timespent" under Articles also.
+            // We can't enter this to database when we're entering the article info because at that point we don't know how much
+            // time the user is spending in that SOURCE. Therefore, we need to wait until the user comes back to the source screen and then
+            // put the "Source Timespent" columns in all the articles the user has clicked on under that particular source.
             // Adds Source Timespent to all appropriate rows.
             if (numArticleClicked > -1) {
                 for i in 0...numArticleClicked {
@@ -64,6 +73,7 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
             }
         }
         
+        // This is basically like the index. It gets incremented for every new source/article clicked.
         // Increment DatabaseEntryNum
         let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
         UserDefaults.standard.set(entryNum + 1, forKey: "DatabaseEntryNum")
@@ -140,6 +150,11 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         return formatter.string(from: date as Date)
     }
     
+    // I really don't think you need to worry much about this function. It basically calculates the min, sec, and ms.
+    // You'll have to read up on Timer.scheduledTimer(...) documentation to understand it thoroughly.
+    // But what I understood is that you need to provide a custom function as argument which gets called every timeInterval (which is 0.01 in this case. Check the line of code where I call timer.scheduleTimer)
+    // So every 0.01 seconds the minutes, seconds and milliseconds are calculated and stored in sourceTimespent variable.
+    // Also, I'm setting the timerOn variable to true!! (Important because this variable is used in other screens too)
     @objc func updateCounter() {
         time = Date().timeIntervalSinceReferenceDate - startTime
         

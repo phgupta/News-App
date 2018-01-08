@@ -42,6 +42,8 @@ class ArticleTableViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         
+        // Since we don't know what the "Source Timespent" is (since the user could potentially look at another article of the same source)
+        // we don't need to worry about it and therefore the code is short here. We only need to add "Article Timespent" to database.
         // Add Source Timespent to Database
         if (timerOn) {
             timer?.invalidate()

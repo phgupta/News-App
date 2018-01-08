@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     }
 }
 
-// UserDefaults
+// All the variables stored in UserDefaults
 // 1. VersionNum: Int = [1, 2, 3]
 // 2. BiasingScore: Int = 0, 1, 2...100
 // 3. UserID: String
