@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>193937704738-sht3uquejdipnfvibn2oe9mojkudluds.apps.googleusercontent.com</string>
+	<string>441688402570-sgmha6e2hgnjvgolf75o9q07q1pkdjv0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.193937704738-sht3uquejdipnfvibn2oe9mojkudluds</string>
+	<string>com.googleusercontent.apps.441688402570-sgmha6e2hgnjvgolf75o9q07q1pkdjv0</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBTHcyLpxMw6BsOB3GxgpyuXGZTlM8owvU</string>
+	<string>AIzaSyD9bETxHGTJ0-feayAaKC3L0bGoakhFkW0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>193937704738</string>
+	<string>441688402570</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.pranavhgupta.News-App</string>
 	<key>PROJECT_ID</key>
-	<string>news-app-c6b6e</string>
+	<string>echo-chamber-7e6d4</string>
 	<key>STORAGE_BUCKET</key>
-	<string>news-app-c6b6e.appspot.com</string>
+	<string>echo-chamber-7e6d4.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:193937704738:ios:ecc29838da508928</string>
+	<string>1:441688402570:ios:ecc29838da508928</string>
 	<key>DATABASE_URL</key>
-	<string>https://news-app-c6b6e.firebaseio.com</string>
+	<string>https://echo-chamber-7e6d4.firebaseio.com</string>
 </dict>
 </plist>
