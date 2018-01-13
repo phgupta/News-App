@@ -33,11 +33,14 @@ class ArticleTableViewController: UITableViewController {
     var time: Double = 0.0
     var timerOn: Bool = false
     
+    let dispatchGroup = DispatchGroup()
+    
     
     // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchArticles()
+        getArticles()
+        //fetchArticles()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -125,6 +128,37 @@ class ArticleTableViewController: UITableViewController {
     
     
     // Custom functions
+    func getArticles() {
+        
+        dispatchGroup.enter()
+        self.ref?.child("News").child(sourceName).observeSingleEvent(of: .value, with: {(snapshot) in
+            
+            self.articles = [ArticleObject]()
+            let value = snapshot.value as? NSArray
+            for v in value! {
+                
+                let article = ArticleObject()
+                let dict = v as? [String:String]
+                
+                article.author = dict?["Author"]
+                article.title = dict?["Title"]
+                article.body = dict?["Body"]
+                article.published_at = dict?["Published At"]
+                article.imageUrl = dict?["Image URL"]
+                self.articles?.append(article)
+            }
+            self.dispatchGroup.leave()
+            
+        }) { (error) in
+            print(error.localizedDescription)
+            self.dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.articleTableView.reloadData()
+        }
+    }
+    
     func fetchArticles() {
         
         articles = [ArticleObject]()
