@@ -24,6 +24,9 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     var time: Double = 0.0
     var timerOn: Bool = false
     
+    let dispatchGroup = DispatchGroup()
+    var articles: [ArticleObject]? = []     // Object holding Articles
+    
     
     // Outlets
     @IBOutlet weak var collectionView: UICollectionView!
@@ -94,31 +97,50 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // Start timer
-        startTime = Date().timeIntervalSinceReferenceDate
-        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+        dispatchGroup.enter()
+        self.ref?.child("News").child("Date").observeSingleEvent(of: .value, with: {(DataSnapshot) in
+            let value = DataSnapshot.value
+            print("Value: ", value ?? "Empty")
+            
+            self.pushArticlesToDatabase()
+//            if (currentDate > dateInDataBase()) {
+//                add articles to database
+//                dateInDatabase = currentDate
+//            }
         
-        sourcePos = indexPath.row
-        sourceTimestamp = getCurrentDate()
-        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-        
-        // Change BiasingScore only for Version1
-        if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
-            if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
-                biaser.lSourceClicked()
-                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            } else {
-                biaser.cSourceClicked()
-                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-            }
+            self.dispatchGroup.leave()
+        }) { (error) in
+            print(error.localizedDescription)
+            self.dispatchGroup.leave()
         }
-        
-        // Push source name, position, timestamp and timespent to database
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[sourcePos])
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Position").setValue(sourcePos)
-        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timestamp").setValue(sourceTimestamp)
-        
-        performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
+
+        dispatchGroup.notify(queue: .main) {
+            // Start timer
+            self.startTime = Date().timeIntervalSinceReferenceDate
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounter), userInfo: nil, repeats: true)
+            
+            self.sourcePos = indexPath.row
+            self.sourceTimestamp = self.getCurrentDate()
+            let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+            
+            // Change BiasingScore only for Version1
+            if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
+                if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
+                    biaser.lSourceClicked()
+                    UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+                } else {
+                    biaser.cSourceClicked()
+                    UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+                }
+            }
+            
+            // Push source name, position, timestamp and timespent to database
+            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[self.sourcePos])
+            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Position").setValue(self.sourcePos)
+            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timestamp").setValue(self.sourceTimestamp)
+            
+            self.performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -176,5 +198,72 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         
         sourceTimespent = strMinutes + ":" + strSeconds + ":" + strMilliseconds
         timerOn = true
+    }
+    
+    func pushArticlesToDatabase() {
+        
+        articles = [ArticleObject]() // CHECK: Not needed
+        
+        let allSources = biaser.liberalSources + biaser.conservativeSources
+        
+        for source in allSources {
+            
+            var numberOfArticles: Int = 0
+            
+            var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + source.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=15")!)
+            let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " 8d5af121", "X-AYLIEN-NewsAPI-Application-Key" : "  afb268a5ee95bcbba0bfe29aadbc9726"] as Dictionary<String, String>
+            urlRequest.allHTTPHeaderFields = headerFields
+            
+            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                if (error != nil) {
+                    print(error!)
+                }
+                
+                do {
+                    
+                    let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String:AnyObject]
+                    if let articlesFromJSON = json["stories"] as? [[String: AnyObject]] {
+                        
+                        for articleFromJSON in articlesFromJSON {
+                            
+                            let wordCount = articleFromJSON["words_count"] as? Int
+                            if (wordCount! > 100 && numberOfArticles < 5) {
+                            
+                            // Store Author
+                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Author").setValue(articleFromJSON["author"]?["name"] as? String)
+                            
+                            // Store Title
+                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Title").setValue(articleFromJSON["title"] as? String)
+                            
+                            // Store Body
+                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Body").setValue(articleFromJSON["body"] as? String)
+                            
+                            // Store Published At date
+                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Published At").setValue(articleFromJSON["published_at"] as? String)
+                                
+                                // Store Image URL
+                                let item = articleFromJSON["media"] as? NSArray
+                                let firstElement = item?.object(at: 0)
+                                if let dict = (firstElement as? [String:Any]) {
+                                    if let url = dict["url"] as? String {
+                                        self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Image URL").setValue(url)
+                                    } else {
+                                        print("Error: Could not load image url.")
+                                    }
+                                } else {
+                                    print("Error: Could not load image url.")
+                                }
+                                
+                                numberOfArticles += 1
+                            }
+                        }
+                    }
+                } catch let error {
+                    print (error)
+                }
+            }
+            
+            task.resume()
+        }
     }
 }

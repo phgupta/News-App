@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "News App/ArticleTableViewController.swift"
-            timestampString = "537486024.2836"
+            timestampString = "537561910.137617"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "150"
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "News App/SourcesCollectionViewController.swift"
-            timestampString = "535783607.533788"
+            timestampString = "537561910.137749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
             landmarkName = "SourcesCollectionViewController"
             landmarkType = "3">
          </BreakpointContent>

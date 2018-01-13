@@ -11,7 +11,7 @@ import UIKit
 class LoginViewController: UIViewController {
     
     // Global variables
-    let NewsTagArray = ["0001", "0002", "0003"]
+    let NewsTagArray = ["0001", "0002", "0003"] // CHECK:  Delete this later
     let versions = ["NBC", "BOM", "BWM"]
     
     
