@@ -11,7 +11,8 @@ import UIKit
 class BiasingMetaData: NSObject {
 
     // Data members
-    var uniqueID: String = ""
+    var versionType: Int = 0;
+    var uniqueID: String = "";
     var categorizer = ["Breitbart": "C", "Fox News": "C", "Drudge Report": "C", "Daily Caller": "C", "Washington Times": "C", "Townhall": "C", "The Hill": "C", "New York Post": "C", "Zero Hedge": "C", "The Blaze": "C", "National Review": "C", "CNS News": "C",
                        "MSNBC": "L", "New Yorker": "L", "CNN": "L", "Huffington Post": "L", "Politico": "L", "The New York Times": "L", "Washington Post": "L", "NBC News": "L", "Daily Kos": "L", "Vox": "L", "The Nation": "L", "Slate": "L"]
     var liberalSources = ["MSNBC", "New Yorker", "CNN", "Huffington Post", "Politico", "The New York Times",
@@ -27,6 +28,21 @@ class BiasingMetaData: NSObject {
     var liberalScore = 6
     var conservativeScore = -6
     
+    func noBiasing() {
+        activeSources.removeAll()
+        liberalSources.shuffle()
+        conservativeSources.shuffle()
+        
+        for i in 0...11 {
+            let rand = Int(arc4random_uniform(101))
+            
+            if (rand < 50) {
+                activeSources.append(conservativeSources[i])
+            } else {
+                activeSources.append(liberalSources[i])
+            }
+        }
+    }
     
     // Member Functions
     func implementBiasing() {
@@ -45,6 +61,7 @@ class BiasingMetaData: NSObject {
             }
         }
     }
+    
     
     func lSourceClicked() {
         

@@ -20,10 +20,10 @@ class StoryDisplayViewController: UIViewController {
     //Outlets
     @IBOutlet weak var dateDisplay: UILabel!
     @IBOutlet weak var articleImage: UIImageView!
-    @IBOutlet weak var textbody: UITextView!
+    @IBOutlet weak var textbody: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var articleTitle: UILabel!
-    
+
     
     // Default functions
     override func viewDidLoad() {
@@ -33,6 +33,7 @@ class StoryDisplayViewController: UIViewController {
         authorLabel.text = articles![articlePos].author
         articleTitle.text = articles![articlePos].title
         textbody.text = articles![articlePos].body
+        textbody.sizeToFit()
         articleImage.downloadImage(from: (articles![articlePos].imageUrl!))
         dateDisplay.text = date
     }
