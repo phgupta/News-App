@@ -15,18 +15,19 @@ let biaser = BiasingMetaData()
 class SourcesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // Variables
-    var ref: DatabaseReference!             // Firebase reference
+    var ref: DatabaseReference!// Firebase reference
     var sourcePos: Int = -1                 // Position of source clicked (0-11)
     var sourceTimestamp: String = ""        // Source Timestamp
-    var sourceTimespent: String = ""        // Source Timespent
+    var sourceTimespent: Int = 0        // Source Timespent
+    var timeSpentonMessage1: Int = 0
+    var timeSpentonMessage2: Int = 0
+    var timeSpentonMessage3: Int = 0
+    var newDay: Bool = false
+    var numDays: Int = 0
     weak var timer: Timer?
     var startTime: Double = 0.0
     var time: Double = 0.0
     var timerOn: Bool = false
-    
-    let dispatchGroup = DispatchGroup()
-    var articles: [ArticleObject]? = []     // Object holding Articles
-    
     
     // Outlets
     @IBOutlet weak var collectionView: UICollectionView!
@@ -34,17 +35,75 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     // Default functions
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
+
         ref = Database.database().reference()
-        biaser.uniqueID = String(describing: UserDefaults.standard.string(forKey: "UserID")!)
-        
+        biaser.versionType = UserDefaults.standard.integer(forKey: "VersionNum")
+        biaser.uniqueID = UserDefaults.standard.string(forKey: "UserID")!
+        print(biaser.uniqueID)
         // Initalizing database columns' initial values
         UserDefaults.standard.set(-1, forKey: "DatabaseEntryNum")
         UserDefaults.standard.set(0, forKey: "NumArticleClicked")
         
-        // Sets score to 50 and shuffles the sources list.
-        biaser.implementBiasing()
+        var dateToday = UserDefaults.standard.string(forKey: "currentDate")
+        let currentDate = getCurrentDate()
+        if (dateToday == nil) {
+            dateToday = getCurrentDate()
+            UserDefaults.standard.set(dateToday, forKey: "currentDate")
+            newDay = true
+        }
+        
+        else if (dateToday != currentDate) {
+            newDay = true
+            UserDefaults.standard.set(dateToday, forKey: "currentDate")
+        }
+        
+        else {
+            newDay = false
+        }
+        
+        if (biaser.versionType == 1) { // Biasing without message
+            if (newDay){
+                biaser.implementBiasing()
+                UserDefaults.standard.set(biaser.activeSources, forKey: "ActiveSources")
+            }
+            else{
+                biaser.activeSources = UserDefaults.standard.array(forKey: "ActiveSources") as! [String]
+            }
+        }
+        
+        else if (biaser.versionType == 2) { // No bias
+            if (newDay){
+                biaser.noBiasing()
+                UserDefaults.standard.set(biaser.activeSources, forKey: "ActiveSources")
+            }
+            else {
+                biaser.activeSources = UserDefaults.standard.array(forKey: "ActiveSources") as! [String]
+            }
+            
+        }
+        
+        else if (biaser.versionType == 3) { // Bias with message
+            if (newDay){
+                biaser.implementBiasing()
+                let daynumber = UserDefaults.standard.integer(forKey: "DayNumber")
+                numDays = daynumber + 1
+                UserDefaults.standard.set(numDays, forKey: "DayNumber")
+                UserDefaults.standard.set(biaser.activeSources, forKey: "ActiveSources")
+                print (numDays)
+                if (numDays == 1) {
+                    
+                    startTime = Date().timeIntervalSinceReferenceDate
+                    
+                    timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounterforMessage1), userInfo: nil, repeats: true)
+                    showMessage1(title: "Intervention!", message: "Most news aggregator algorithms, like the kind used in this app, track your behavior. They then use this information to guide you toward news articles that reflect your own ideological preferences. \n Why is this a problem?")
+                }
+            }
+            else{
+                biaser.activeSources = UserDefaults.standard.array(forKey: "ActiveSources") as! [String]
+            }
+            
+        }
+        super.viewDidLoad()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +112,9 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         // timerOn is initially set to false. Once user clicks on a source, it's set to True and over here it checks whether
         // timerOn is true or not.
         // Add Source Timespent to database if source has been clicked
+
+        
+        
         if (timerOn) {
             
             // Stop the timer and make timerOn to false.
@@ -88,8 +150,6 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SourcesCell", for: indexPath) as! SourcesCell
-        cell.layer.borderColor = UIColor.black.cgColor
-        cell.layer.borderWidth = 3
         cell.myImage.image = UIImage(named: biaser.activeSources[indexPath.row])
         cell.myImage.contentMode = .scaleAspectFit
         return cell
@@ -97,50 +157,32 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        dispatchGroup.enter()
-        self.ref?.child("News").child("Date").observeSingleEvent(of: .value, with: {(DataSnapshot) in
-            let value = DataSnapshot.value
-            print("Value: ", value ?? "Empty")
-            
-            self.pushArticlesToDatabase()
-//            if (currentDate > dateInDataBase()) {
-//                add articles to database
-//                dateInDatabase = currentDate
-//            }
+        // Start timer
+        startTime = Date().timeIntervalSinceReferenceDate
         
-            self.dispatchGroup.leave()
-        }) { (error) in
-            print(error.localizedDescription)
-            self.dispatchGroup.leave()
-        }
-
-        dispatchGroup.notify(queue: .main) {
-            // Start timer
-            self.startTime = Date().timeIntervalSinceReferenceDate
-            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounter), userInfo: nil, repeats: true)
-            
-            self.sourcePos = indexPath.row
-            self.sourceTimestamp = self.getCurrentDate()
-            let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
-            
-            // Change BiasingScore only for Version1
-            if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
-                if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
-                    biaser.lSourceClicked()
-                    UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-                } else {
-                    biaser.cSourceClicked()
-                    UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
-                }
+        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+        
+        sourcePos = indexPath.row
+        sourceTimestamp = getCurrentDate()
+        let entryNum = UserDefaults.standard.integer(forKey: "DatabaseEntryNum")
+        
+        // Change BiasingScore only for Version1
+        if (UserDefaults.standard.integer(forKey: "VersionNum") == 1) {
+            if (biaser.categorizer[biaser.activeSources[indexPath.row]] == "L") {
+                biaser.lSourceClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
+            } else {
+                biaser.cSourceClicked()
+                UserDefaults.standard.set(biaser.biasingScore, forKey: "BiasingScore")
             }
-            
-            // Push source name, position, timestamp and timespent to database
-            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[self.sourcePos])
-            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Position").setValue(self.sourcePos)
-            self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timestamp").setValue(self.sourceTimestamp)
-            
-            self.performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
         }
+        
+        // Push source name, position, timestamp and timespent to database
+        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Name").setValue(biaser.activeSources[sourcePos])
+        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Position").setValue(sourcePos)
+        self.ref?.child(biaser.uniqueID).child(String(entryNum)).child("Source Timestamp").setValue(sourceTimestamp)
+        
+        performSegue(withIdentifier: "toArticleTableViewController", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -169,6 +211,14 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
         formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
+        return String(formatter.string(from: date as Date).prefix(10))
+    }
+    
+    func getDate() -> String {
+        let date = NSDate()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
         return formatter.string(from: date as Date)
     }
     
@@ -180,90 +230,136 @@ class SourcesCollectionViewController: UIViewController, UICollectionViewDelegat
     @objc func updateCounter() {
         time = Date().timeIntervalSinceReferenceDate - startTime
         
-        // Calculate minutes
-        let minutes = UInt8(time / 60.0)
-        time -= (TimeInterval(minutes) * 60)
+//        // Calculate minutes
+//        let minutes = UInt8(time / 60.0)
+//        time -= (TimeInterval(minutes) * 60)
+//
+//        // Calculate seconds
+//        let seconds = UInt8(time)
+//        time -= TimeInterval(seconds)
+//
+//        // Calculate milliseconds
+//        let milliseconds = UInt8(time * 100)
+//
+//        // Format time vars with leading zero
+//        let strMinutes = String(format: "%02d", minutes)
+//        let strSeconds = String(format: "%02d", seconds)
+//        let strMilliseconds = String(format: "%02d", milliseconds)
         
-        // Calculate seconds
-        let seconds = UInt8(time)
-        time -= TimeInterval(seconds)
-        
-        // Calculate milliseconds
-        let milliseconds = UInt8(time * 100)
-        
-        // Format time vars with leading zero
-        let strMinutes = String(format: "%02d", minutes)
-        let strSeconds = String(format: "%02d", seconds)
-        let strMilliseconds = String(format: "%02d", milliseconds)
-        
-        sourceTimespent = strMinutes + ":" + strSeconds + ":" + strMilliseconds
+        sourceTimespent = Int(time)
+        time = time*1000
         timerOn = true
     }
     
-    func pushArticlesToDatabase() {
-        
-        articles = [ArticleObject]() // CHECK: Not needed
-        
-        let allSources = biaser.liberalSources + biaser.conservativeSources
-        
-        for source in allSources {
-            
-            var numberOfArticles: Int = 0
-            
-            var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + source.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=15")!)
-            let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " 8d5af121", "X-AYLIEN-NewsAPI-Application-Key" : "  afb268a5ee95bcbba0bfe29aadbc9726"] as Dictionary<String, String>
-            urlRequest.allHTTPHeaderFields = headerFields
-            
-            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-                if (error != nil) {
-                    print(error!)
-                }
-                
-                do {
-                    
-                    let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String:AnyObject]
-                    if let articlesFromJSON = json["stories"] as? [[String: AnyObject]] {
-                        
-                        for articleFromJSON in articlesFromJSON {
-                            
-                            let wordCount = articleFromJSON["words_count"] as? Int
-                            if (wordCount! > 100 && numberOfArticles < 5) {
-                            
-                            // Store Author
-                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Author").setValue(articleFromJSON["author"]?["name"] as? String)
-                            
-                            // Store Title
-                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Title").setValue(articleFromJSON["title"] as? String)
-                            
-                            // Store Body
-                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Body").setValue(articleFromJSON["body"] as? String)
-                            
-                            // Store Published At date
-                            self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Published At").setValue(articleFromJSON["published_at"] as? String)
-                                
-                                // Store Image URL
-                                let item = articleFromJSON["media"] as? NSArray
-                                let firstElement = item?.object(at: 0)
-                                if let dict = (firstElement as? [String:Any]) {
-                                    if let url = dict["url"] as? String {
-                                        self.ref?.child("News").child(source).child(String(numberOfArticles)).child("Image URL").setValue(url)
-                                    } else {
-                                        print("Error: Could not load image url.")
-                                    }
-                                } else {
-                                    print("Error: Could not load image url.")
-                                }
-                                
-                                numberOfArticles += 1
-                            }
-                        }
-                    }
-                } catch let error {
-                    print (error)
-                }
-            }
-            
-            task.resume()
-        }
+    @objc func updateCounterforMessage1() {
+        time = Date().timeIntervalSinceReferenceDate - startTime
+        time = time*1000
+        timeSpentonMessage1 = Int(time)
     }
+    @objc func updateCounterforMessage2() {
+        time = Date().timeIntervalSinceReferenceDate - startTime
+        time = time*1000
+        timeSpentonMessage2 = Int(time)
+    }
+    
+    @objc func updateCounterforMessage3() {
+        time = Date().timeIntervalSinceReferenceDate - startTime
+        time = time*1000
+        timeSpentonMessage3 = Int(time)
+    }
+    
+    func createAlert (title:String, message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)}))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showMessage1(title:String, message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Next", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 1").setValue(self.timeSpentonMessage1)
+            
+            self.startTime = Date().timeIntervalSinceReferenceDate
+            
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounterforMessage2), userInfo: nil, repeats: true)
+            
+            self.showMessage2(title: "Intervention!", message: "Tailored offers prevent you from being exposed to other ideas and viewpoints which you might disagree with. Researchers say that this forces you into an echo chamber packed only with news articles you agree with and thus eliminating news articles you might disagree with. As a result, you are at the risk of eventually becoming a victim to your own biases. \n What can you do?")
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showMessage2(title:String, message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Back", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 2").setValue(self.timeSpentonMessage2)
+            
+            self.startTime = Date().timeIntervalSinceReferenceDate
+            
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounterforMessage1), userInfo: nil, repeats: true)
+            
+            self.showMessage1(title: "Intervention!", message: "Most news aggregator algorithms, like the kind used in this app, track your behavior. They then use this information to guide you toward news articles that reflect your own ideological preferences. Why is this a problem?")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Next", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 2").setValue(self.timeSpentonMessage2)
+            
+            self.startTime = Date().timeIntervalSinceReferenceDate
+            
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounterforMessage3), userInfo: nil, repeats: true)
+            self.showMessage3(title: "Intervention!", message: "At this point you have a choice: \n Please press “Reset” to break the echo chamber effect and receive news from an equal number of pro-Democratic and pro-Republican sources. \n OR \n Please press “Continue” to continue with the suggestions tailored to your prior choices.")
+        }))
+        
+
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showMessage3(title:String, message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Back", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 3").setValue(self.timeSpentonMessage3)
+            
+            self.startTime = Date().timeIntervalSinceReferenceDate
+            
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateCounterforMessage2), userInfo: nil, repeats: true)
+            self.showMessage2(title: "Intervention!", message: "Tailored offers prevent you from being exposed to other ideas and viewpoints which you might disagree with. Researchers say that this forces you into an echo chamber packed only with news articles you agree with and thus eliminating news articles you might disagree with. As a result, you are at the risk of eventually becoming a victim to your own biases. What can you do?")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Continue", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            print("Continue")
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("Choice").setValue("Continue")
+            let date = self.getDate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("Date").setValue(date)
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 3").setValue(self.timeSpentonMessage3)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Reset", style: UIAlertActionStyle.default, handler: { (action) in alert.dismiss(animated: true, completion: nil)
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("Choice").setValue("Reset")
+            let date = self.getDate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("Date").setValue(date)
+            self.timer?.invalidate()
+            self.ref?.child(biaser.uniqueID).child("Intervention").child("TimeSpent on Message 3").setValue(self.timeSpentonMessage3)
+            biaser.versionType = 2
+            UserDefaults.standard.set(biaser.versionType, forKey: "VersionNum")
+        }))
+        
+
+        
+
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }

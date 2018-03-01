@@ -33,14 +33,11 @@ class ArticleTableViewController: UITableViewController {
     var time: Double = 0.0
     var timerOn: Bool = false
     
-    let dispatchGroup = DispatchGroup()
-    
     
     // Default functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        getArticles()
-        //fetchArticles()
+        fetchArticles()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,6 +45,7 @@ class ArticleTableViewController: UITableViewController {
         // Since we don't know what the "Source Timespent" is (since the user could potentially look at another article of the same source)
         // we don't need to worry about it and therefore the code is short here. We only need to add "Article Timespent" to database.
         // Add Source Timespent to Database
+        
         if (timerOn) {
             timer?.invalidate()
             timerOn = false
@@ -128,44 +126,14 @@ class ArticleTableViewController: UITableViewController {
     
     
     // Custom functions
-    func getArticles() {
-        
-        dispatchGroup.enter()
-        self.ref?.child("News").child(sourceName).observeSingleEvent(of: .value, with: {(snapshot) in
-            
-            self.articles = [ArticleObject]()
-            let value = snapshot.value as? NSArray
-            for v in value! {
-                
-                let article = ArticleObject()
-                let dict = v as? [String:String]
-                
-                article.author = dict?["Author"]
-                article.title = dict?["Title"]
-                article.body = dict?["Body"]
-                article.published_at = dict?["Published At"]
-                article.imageUrl = dict?["Image URL"]
-                self.articles?.append(article)
-            }
-            self.dispatchGroup.leave()
-            
-        }) { (error) in
-            print(error.localizedDescription)
-            self.dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            self.articleTableView.reloadData()
-        }
-    }
-    
     func fetchArticles() {
         
         articles = [ArticleObject]()
         
-        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + sourceName.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=15")!)
+        var urlRequest = URLRequest(url: URL(string: "https://api.newsapi.aylien.com/api/v1/stories?categories.taxonomy=iptc-subjectcode&categories.confident=true&categories.id%5B%5D=11000000&media.images.count.min=1&media.videos.count.max=0&source.name%5B%5D=" + sourceName.replacingOccurrences(of: " ", with: "%20") + "&cluster=false&cluster.algorithm=lingo&sort_by=recency&sort_direction=desc&cursor=*&per_page=25")!)
+        
 
-        let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : " 8d5af121", "X-AYLIEN-NewsAPI-Application-Key" : "  afb268a5ee95bcbba0bfe29aadbc9726"] as Dictionary<String, String>
+        let headerFields = ["X-AYLIEN-NewsAPI-Application-ID" : "24a48992", "X-AYLIEN-NewsAPI-Application-Key" : "2830097f030b43af196bbc1fb540a800"] as Dictionary<String, String>
         urlRequest.allHTTPHeaderFields = headerFields
 
         let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
@@ -197,6 +165,7 @@ class ArticleTableViewController: UITableViewController {
 
                             if let url = dict["url"] as? String {
                                 article.imageUrl = url
+                                print(url)
                             } else {
                                 print("Error")
                             }
@@ -204,7 +173,7 @@ class ArticleTableViewController: UITableViewController {
                             print("Error")
                         }
                         
-                        if (article.wordcount! > 100 && (self.articles?.count)! < 5) {
+                        if (article.wordcount! > 100 && (self.articles?.count)! < 6) {
                             self.articles?.append(article)
                         }
                     }
@@ -234,23 +203,23 @@ class ArticleTableViewController: UITableViewController {
     @objc func updateCounter() {
         time = Date().timeIntervalSinceReferenceDate - startTime
         
-        // Calculate minutes
-        let minutes = UInt8(time / 60.0)
-        time -= (TimeInterval(minutes) * 60)
+//        // Calculate minutes
+//        let minutes = UInt8(time / 60.0)
+//        time -= (TimeInterval(minutes) * 60)
+//
+//        // Calculate seconds
+//        let seconds = UInt8(time)
+//        time -= TimeInterval(seconds)
+//
+//        // Calculate milliseconds
+//        let milliseconds = UInt8(time * 100)
+//
+//        // Format time vars with leading zero
+//        let strMinutes = String(format: "%02d", minutes)
+//        let strSeconds = String(format: "%02d", seconds)
+//        let strMilliseconds = String(format: "%02d", milliseconds)
         
-        // Calculate seconds
-        let seconds = UInt8(time)
-        time -= TimeInterval(seconds)
-        
-        // Calculate milliseconds
-        let milliseconds = UInt8(time * 100)
-        
-        // Format time vars with leading zero
-        let strMinutes = String(format: "%02d", minutes)
-        let strSeconds = String(format: "%02d", seconds)
-        let strMilliseconds = String(format: "%02d", milliseconds)
-        
-        articleTimespent = strMinutes + ":" + strSeconds + ":" + strMilliseconds
+        articleTimespent = String(time)
         timerOn = true
     }
 }
