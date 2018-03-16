@@ -51,15 +51,22 @@ class StoryDisplayViewController: UIViewController {
                     "05": "May", "06": "June", "07": "July", "08": "August",
                     "09": "September", "10": "October", "11": "November", "12": "December"]
         
-        unformattedDate = articles![articlePos].published_at!
+        unformattedDate = getCurrentDate()
         var arr = unformattedDate.components(separatedBy: "-")
-        var arr2 = arr[2].components(separatedBy: "T")
         
         let year = arr[0]
         let month = String(months[arr[1]]!)
-        let day = arr2[0]
+        let day = arr[2]
         
         date = day + " " + month + " " + year
+    }
+    
+    func getCurrentDate() -> String {
+        let date = NSDate()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = NSTimeZone(abbreviation: "PST")! as TimeZone
+        return String(formatter.string(from: date as Date).prefix(10))
     }
 }
 
